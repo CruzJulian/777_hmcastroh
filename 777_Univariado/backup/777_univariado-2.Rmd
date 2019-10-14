@@ -1,0 +1,96 @@
+---
+title: "777 Univariado"
+author: "Norberto Andres Camacho Hincapie"
+date: "16/01/2019"
+output:
+  word_document: default
+  html_document: default
+---
+
+# Primero unos datos de juguete y un diccionario hecho ahí.
+
+```{r}
+library("devtools")
+library("saber")
+library("pander")
+library("ggplot2")
+library("googlesheets")
+library("dplyr")
+library("scales")
+library("magrittr")
+
+child_file <- "777_univariado.rmd"
+
+"https://docs.google.com/spreadsheets/d/1b_JeK80JiYfLBkn0H2Cm9DgC47O_N-JnZHu-C7uZ5Wc/edit?usp=sharing"->link2
+
+link2 %>% gs_url(lookup = FALSE, verbose = FALSE) %>% gs_read_listfeed(range=NULL) -> dicc_777
+
+
+"https://docs.google.com/spreadsheets/d/10qllwE4T_imJ6cJxh-INzfDMC7ZddpYjZFKKl4aCryk/edit?usp=sharing"-> link
+
+
+link %>% gs_url(lookup = FALSE, verbose = FALSE) %>% gs_read_listfeed(range=NULL)%>% setNames(dicc_777[["rotulo"]])  -> data_777
+
+
+```
+
+
+```{r}
+univariado_777 <- function(datos, diccionario){
+  
+   rmd <- var_seccion <- character()
+
+   
+   for(i in seq(nrow(diccionario))){
+
+            diccionario %>% "[" (i,"rotulo") -> nombr # Abreviatura de la variable
+   
+            diccionario %>% "[" (i,"texto")  -> cap   # Descripcion de la variable
+   
+            datos %>% "[[" (nombr) -> variable 
+
+            var_seccion[1] <- paste0("### ", nombr)  
+
+            var_seccion[2] <- ""  
+            
+            if (is.numeric(variable) == TRUE) {
+              
+            var_seccion[3] <- paste0("A continuación se muestran las estadísticas descriptivas de la variable",                                             nombr)       
+                
+            var_seccion[4] <- ""                
+                
+            var_seccion[5] <- "```{r fig.width = 7.5, fig.height = 5.5, dpi =   144,echo=F,warning=FALSE,message=FALSE}"    
+
+
+            var_seccion[6] <- paste0("pender(c(", variable, " %>% mean(na.rm = T), ",  variable, " %>% var(na.rm = T), ",  variable, " %>% sd(na.rm = T), ",  variable, " %>% min(na.rm = T), ",  variable, " %>% max(na.rm = T)))")      
+
+
+
+              } else{
+                
+            var_seccion[3] <- "No es numerica"              
+              }
+   
+   paste(var_seccion, collapse = "\n") -> rmd[i]   
+   
+   }
+     paste(rmd, collapse = "\n")
+}
+```
+
+```{r}
+cat(univariado_777("data_777", dicc_777))
+
+```
+
+```{r}
+
+fileconn <- file(child_file)
+writeLines(univariado_777(data_777, dicc_777), con = fileconn)
+close(fileconn)
+
+
+```
+
+```{r child = child_file}
+```

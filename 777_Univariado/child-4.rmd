@@ -1,0 +1,4752 @@
+
+
+## Me importa el placer de la persona con la que tengo relaciones sexuales
+
+
+
+A continuación se presentan las estadísticas de la variable Me importa el placer de la persona con la que tengo relaciones sexuales (`2PlacerOtro`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2PlacerOtro"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Me importa el placer de la persona con la que tengo relaciones sexuales. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2PlacerOtro")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2PlacerOtro") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Me importa el placer de la persona con la que tengo relaciones sexuales" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Me importa el placer de la persona con la que tengo relaciones sexuales (`2PlacerOtro`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Considero que mis experiencias sexuales son muy placenteras
+
+
+
+A continuación se presentan las estadísticas de la variable Considero que mis experiencias sexuales son muy placenteras (`2ExperPl`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2ExperPl"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Considero que mis experiencias sexuales son muy placenteras. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2ExperPl")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2ExperPl") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Considero que mis experiencias sexuales son muy placenteras" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Considero que mis experiencias sexuales son muy placenteras (`2ExperPl`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Me incomoda manifestar placer
+
+
+
+A continuación se presentan las estadísticas de la variable Me incomoda manifestar placer (`2IncomodaPl`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2IncomodaPl"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Me incomoda manifestar placer. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2IncomodaPl")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2IncomodaPl") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Me incomoda manifestar placer" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Me incomoda manifestar placer (`2IncomodaPl`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## En el momento de mis prácticas sexuales me inquieta no alcanzar el orgasmo rápidamente
+
+
+
+A continuación se presentan las estadísticas de la variable En el momento de mis prácticas sexuales me inquieta no alcanzar el orgasmo rápidamente (`2OrgasmoRap`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2OrgasmoRap"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable En el momento de mis prácticas sexuales me inquieta no alcanzar el orgasmo rápidamente. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2OrgasmoRap")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2OrgasmoRap") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "En el momento de mis prácticas sexuales me inquieta no alcanzar el orgasmo rápidamente" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de En el momento de mis prácticas sexuales me inquieta no alcanzar el orgasmo rápidamente (`2OrgasmoRap`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Después de una relación sexual evito el contacto con la persona con quien estuve
+
+
+
+A continuación se presentan las estadísticas de la variable Después de una relación sexual evito el contacto con la persona con quien estuve (`2NoContactoOtro`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2NoContactoOtro"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Después de una relación sexual evito el contacto con la persona con quien estuve. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2NoContactoOtro")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2NoContactoOtro") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Después de una relación sexual evito el contacto con la persona con quien estuve" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Después de una relación sexual evito el contacto con la persona con quien estuve (`2NoContactoOtro`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## En la relación sexual finjo tener un orgasmo para que la otra persona se sienta bien
+
+
+
+A continuación se presentan las estadísticas de la variable En la relación sexual finjo tener un orgasmo para que la otra persona se sienta bien (`2FingirOrgas`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2FingirOrgas"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable En la relación sexual finjo tener un orgasmo para que la otra persona se sienta bien. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2FingirOrgas")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2FingirOrgas") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "En la relación sexual finjo tener un orgasmo para que la otra persona se sienta bien" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de En la relación sexual finjo tener un orgasmo para que la otra persona se sienta bien (`2FingirOrgas`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Me considero buen(a) amante
+
+
+
+A continuación se presentan las estadísticas de la variable Me considero buen(a) amante (`2BuenAmante`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2BuenAmante"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Me considero buen(a) amante. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2BuenAmante")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2BuenAmante") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Me considero buen(a) amante" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Me considero buen(a) amante (`2BuenAmante`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Cuando tengo relaciones sexuales el movimiento con la otra persona es sincronizado
+
+
+
+A continuación se presentan las estadísticas de la variable Cuando tengo relaciones sexuales el movimiento con la otra persona es sincronizado (`2MovSincronia`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2MovSincronia"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Cuando tengo relaciones sexuales el movimiento con la otra persona es sincronizado. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2MovSincronia")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2MovSincronia") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Cuando tengo relaciones sexuales el movimiento con la otra persona es sincronizado" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Cuando tengo relaciones sexuales el movimiento con la otra persona es sincronizado (`2MovSincronia`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## He llorado por la inconformidad generada durante mis relaciones sexuales
+
+
+
+A continuación se presentan las estadísticas de la variable He llorado por la inconformidad generada durante mis relaciones sexuales (`2LlorarInconform`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2LlorarInconform"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable He llorado por la inconformidad generada durante mis relaciones sexuales. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2LlorarInconform")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2LlorarInconform") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "He llorado por la inconformidad generada durante mis relaciones sexuales" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de He llorado por la inconformidad generada durante mis relaciones sexuales (`2LlorarInconform`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Después de mis prácticas sexuales tengo un profundo sentimiento de soledad
+
+
+
+A continuación se presentan las estadísticas de la variable Después de mis prácticas sexuales tengo un profundo sentimiento de soledad (`2SentimSoledad`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2SentimSoledad"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Después de mis prácticas sexuales tengo un profundo sentimiento de soledad. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2SentimSoledad")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2SentimSoledad") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Después de mis prácticas sexuales tengo un profundo sentimiento de soledad" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Después de mis prácticas sexuales tengo un profundo sentimiento de soledad (`2SentimSoledad`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Converso con la otra persona acerca de lo que nos produce placer
+
+
+
+A continuación se presentan las estadísticas de la variable Converso con la otra persona acerca de lo que nos produce placer (`2HablarOtroPl`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2HablarOtroPl"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Converso con la otra persona acerca de lo que nos produce placer. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2HablarOtroPl")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2HablarOtroPl") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Converso con la otra persona acerca de lo que nos produce placer" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Converso con la otra persona acerca de lo que nos produce placer (`2HablarOtroPl`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Mis relaciones sexuales son apasionadas
+
+
+
+A continuación se presentan las estadísticas de la variable Mis relaciones sexuales son apasionadas (`2RSApasionada`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2RSApasionada"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Mis relaciones sexuales son apasionadas. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2RSApasionada")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2RSApasionada") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Mis relaciones sexuales son apasionadas" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Mis relaciones sexuales son apasionadas (`2RSApasionada`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Siento temor de decirle a la otra persona lo que me gusta sexualmente
+
+
+
+A continuación se presentan las estadísticas de la variable Siento temor de decirle a la otra persona lo que me gusta sexualmente (`2TemoHablarDelGusto`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2TemoHablarDelGusto"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Siento temor de decirle a la otra persona lo que me gusta sexualmente. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2TemoHablarDelGusto")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2TemoHablarDelGusto") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Siento temor de decirle a la otra persona lo que me gusta sexualmente" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Siento temor de decirle a la otra persona lo que me gusta sexualmente (`2TemoHablarDelGusto`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Mis parejas me definen como buen(a) amante
+
+
+
+A continuación se presentan las estadísticas de la variable Mis parejas me definen como buen(a) amante (`2MeDicenBuenAmant`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2MeDicenBuenAmant"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Mis parejas me definen como buen(a) amante. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2MeDicenBuenAmant")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2MeDicenBuenAmant") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Mis parejas me definen como buen(a) amante" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Mis parejas me definen como buen(a) amante (`2MeDicenBuenAmant`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Prolongo mi excitación hasta que la otra persona alcance el orgasmo
+
+
+
+A continuación se presentan las estadísticas de la variable Prolongo mi excitación hasta que la otra persona alcance el orgasmo (`2MásExcitaOrgasmoOtro`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2MásExcitaOrgasmoOtro"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Prolongo mi excitación hasta que la otra persona alcance el orgasmo. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2MásExcitaOrgasmoOtro")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2MásExcitaOrgasmoOtro") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Prolongo mi excitación hasta que la otra persona alcance el orgasmo" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Prolongo mi excitación hasta que la otra persona alcance el orgasmo (`2MásExcitaOrgasmoOtro`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Me siento culpable luego de tener una experiencia sexual
+
+
+
+A continuación se presentan las estadísticas de la variable Me siento culpable luego de tener una experiencia sexual (`2SentirCulpable`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2SentirCulpable"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Me siento culpable luego de tener una experiencia sexual. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2SentirCulpable")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2SentirCulpable") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Me siento culpable luego de tener una experiencia sexual" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Me siento culpable luego de tener una experiencia sexual (`2SentirCulpable`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Me reprocho algunas de mis experiencias sexuales
+
+
+
+A continuación se presentan las estadísticas de la variable Me reprocho algunas de mis experiencias sexuales (`2ReprocheExpSex`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2ReprocheExpSex"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Me reprocho algunas de mis experiencias sexuales. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2ReprocheExpSex")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2ReprocheExpSex") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Me reprocho algunas de mis experiencias sexuales" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Me reprocho algunas de mis experiencias sexuales (`2ReprocheExpSex`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Con mi pareja cumplimos nuestras expectativas al tener una relación sexual
+
+
+
+A continuación se presentan las estadísticas de la variable Con mi pareja cumplimos nuestras expectativas al tener una relación sexual (`2CumpleExpectRS`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2CumpleExpectRS"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Con mi pareja cumplimos nuestras expectativas al tener una relación sexual. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2CumpleExpectRS")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2CumpleExpectRS") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Con mi pareja cumplimos nuestras expectativas al tener una relación sexual" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Con mi pareja cumplimos nuestras expectativas al tener una relación sexual (`2CumpleExpectRS`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Cuando estoy sexualmente con mi pareja siento una profunda conexión
+
+
+
+A continuación se presentan las estadísticas de la variable Cuando estoy sexualmente con mi pareja siento una profunda conexión (`2Conexión`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2Conexión"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Cuando estoy sexualmente con mi pareja siento una profunda conexión. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2Conexión")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2Conexión") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Cuando estoy sexualmente con mi pareja siento una profunda conexión" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Cuando estoy sexualmente con mi pareja siento una profunda conexión (`2Conexión`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Me entiendo con las personas con quienes tengo relaciones sexuales
+
+
+
+A continuación se presentan las estadísticas de la variable Me entiendo con las personas con quienes tengo relaciones sexuales (`2EntendimientoOtroRS`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2EntendimientoOtroRS"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Me entiendo con las personas con quienes tengo relaciones sexuales. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2EntendimientoOtroRS")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2EntendimientoOtroRS") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Me entiendo con las personas con quienes tengo relaciones sexuales" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Me entiendo con las personas con quienes tengo relaciones sexuales (`2EntendimientoOtroRS`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## En mis relaciones sexuales logro desinhibirme por completo
+
+
+
+A continuación se presentan las estadísticas de la variable En mis relaciones sexuales logro desinhibirme por completo (`2RSDeshinibida`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2RSDeshinibida"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable En mis relaciones sexuales logro desinhibirme por completo. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2RSDeshinibida")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2RSDeshinibida") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "En mis relaciones sexuales logro desinhibirme por completo" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de En mis relaciones sexuales logro desinhibirme por completo (`2RSDeshinibida`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Considero que mis relaciones sexuales son muy creativas
+
+
+
+A continuación se presentan las estadísticas de la variable Considero que mis relaciones sexuales son muy creativas (`2RSCreativa`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2RSCreativa"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Considero que mis relaciones sexuales son muy creativas. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2RSCreativa")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2RSCreativa") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Considero que mis relaciones sexuales son muy creativas" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Considero que mis relaciones sexuales son muy creativas (`2RSCreativa`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Después de una relación sexual tengo una sensación de plenitud
+
+
+
+A continuación se presentan las estadísticas de la variable Después de una relación sexual tengo una sensación de plenitud (`2RSPlenitud`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2RSPlenitud"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Después de una relación sexual tengo una sensación de plenitud. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2RSPlenitud")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2RSPlenitud") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Después de una relación sexual tengo una sensación de plenitud" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Después de una relación sexual tengo una sensación de plenitud (`2RSPlenitud`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## En mis relaciones sexuales suelo concentrarme en la penetración descuidado otros aspectos
+
+
+
+A continuación se presentan las estadísticas de la variable En mis relaciones sexuales suelo concentrarme en la penetración descuidado otros aspectos (`2SoloPenetrar`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2SoloPenetrar"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable En mis relaciones sexuales suelo concentrarme en la penetración descuidado otros aspectos. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2SoloPenetrar")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2SoloPenetrar") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "En mis relaciones sexuales suelo concentrarme en la penetración descuidado otros aspectos" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de En mis relaciones sexuales suelo concentrarme en la penetración descuidado otros aspectos (`2SoloPenetrar`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## He notado poco interés hacia mis relaciones sexuales
+
+
+
+A continuación se presentan las estadísticas de la variable He notado poco interés hacia mis relaciones sexuales (`2PocoInteresRS`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2PocoInteresRS"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable He notado poco interés hacia mis relaciones sexuales. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2PocoInteresRS")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2PocoInteresRS") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "He notado poco interés hacia mis relaciones sexuales" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de He notado poco interés hacia mis relaciones sexuales (`2PocoInteresRS`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Me involucro con todos mis sentidos cuando tengo una relación sexual
+
+
+
+A continuación se presentan las estadísticas de la variable Me involucro con todos mis sentidos cuando tengo una relación sexual (`2TodosSentidosRS`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2TodosSentidosRS"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Me involucro con todos mis sentidos cuando tengo una relación sexual. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2TodosSentidosRS")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2TodosSentidosRS") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Me involucro con todos mis sentidos cuando tengo una relación sexual" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Me involucro con todos mis sentidos cuando tengo una relación sexual (`2TodosSentidosRS`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Pienso en otras cosas cuando tengo una práctica sexual
+
+
+
+A continuación se presentan las estadísticas de la variable Pienso en otras cosas cuando tengo una práctica sexual (`2PensarOtrasCosas`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2PensarOtrasCosas"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Pienso en otras cosas cuando tengo una práctica sexual. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2PensarOtrasCosas")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2PensarOtrasCosas") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Pienso en otras cosas cuando tengo una práctica sexual" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Pienso en otras cosas cuando tengo una práctica sexual (`2PensarOtrasCosas`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Cuando tengo una relación sexual espero que pronto se acabe
+
+
+
+A continuación se presentan las estadísticas de la variable Cuando tengo una relación sexual espero que pronto se acabe (`2QuieroAbabarPronto`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2QuieroAbabarPronto"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Cuando tengo una relación sexual espero que pronto se acabe. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2QuieroAbabarPronto")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2QuieroAbabarPronto") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Cuando tengo una relación sexual espero que pronto se acabe" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Cuando tengo una relación sexual espero que pronto se acabe (`2QuieroAbabarPronto`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Suelo preguntarme por qué accedí a tener una relación sexual con alguien
+
+
+
+A continuación se presentan las estadísticas de la variable Suelo preguntarme por qué accedí a tener una relación sexual con alguien (`2XQAccediRS`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2XQAccediRS"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Suelo preguntarme por qué accedí a tener una relación sexual con alguien. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2XQAccediRS")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2XQAccediRS") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Suelo preguntarme por qué accedí a tener una relación sexual con alguien" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Suelo preguntarme por qué accedí a tener una relación sexual con alguien (`2XQAccediRS`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Luego de una relación sexual siento como si no hubiera ocurrido
+
+
+
+A continuación se presentan las estadísticas de la variable Luego de una relación sexual siento como si no hubiera ocurrido (`2SentirNoPaso`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2SentirNoPaso"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Luego de una relación sexual siento como si no hubiera ocurrido. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2SentirNoPaso")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2SentirNoPaso") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Luego de una relación sexual siento como si no hubiera ocurrido" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Luego de una relación sexual siento como si no hubiera ocurrido (`2SentirNoPaso`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Cuando amo tanto a las personas con las que me relaciono sexualmente me obligo a realizar lo que no deseo para satisfacerle
+
+
+
+A continuación se presentan las estadísticas de la variable Cuando amo tanto a las personas con las que me relaciono sexualmente me obligo a realizar lo que no deseo para satisfacerle (`2SiAmoAccedoSinDeseo`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2SiAmoAccedoSinDeseo"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Cuando amo tanto a las personas con las que me relaciono sexualmente me obligo a realizar lo que no deseo para satisfacerle. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2SiAmoAccedoSinDeseo")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2SiAmoAccedoSinDeseo") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Cuando amo tanto a las personas con las que me relaciono sexualmente me obligo a realizar lo que no deseo para satisfacerle" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Cuando amo tanto a las personas con las que me relaciono sexualmente me obligo a realizar lo que no deseo para satisfacerle (`2SiAmoAccedoSinDeseo`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Cuando tengo relaciones sexuales cada cual lleva su propio ritmo
+
+
+
+A continuación se presentan las estadísticas de la variable Cuando tengo relaciones sexuales cada cual lleva su propio ritmo (`2PropioRitmo`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2PropioRitmo"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Cuando tengo relaciones sexuales cada cual lleva su propio ritmo. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2PropioRitmo")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2PropioRitmo") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Cuando tengo relaciones sexuales cada cual lleva su propio ritmo" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Cuando tengo relaciones sexuales cada cual lleva su propio ritmo (`2PropioRitmo`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```
+
+
+## Después de mis prácticas sexuales sonrío plácidamente
+
+
+
+A continuación se presentan las estadísticas de la variable Después de mis prácticas sexuales sonrío plácidamente (`2RSSonrisaPl`)
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_777[["2RSSonrisaPl"]] -> variable
+
+
+
+
+
+
+
+if(is.numeric(variable)) {
+     
+                                
+        c(summary(variable)[1],
+                summary(variable)[2],
+                summary(variable)[3],
+                summary(variable)[4],
+                summary(variable)[5],
+                summary(variable)[6],
+                var(variable,na.rm = T),
+                sd(variable,na.rm = T)) %>% 
+                setNames(c("Min.", "1est Qu.", "Median",
+                "Mean", "3rd Qu.", "Max.", "Var.", "DS."))  %>% t() %>%  
+                            
+                  round(digits = 2) %>% 
+                  
+                  kable(caption = "Tabla: estadísticos descriptivos de la variable Después de mis prácticas sexuales sonrío plácidamente. Fuente: elaboración propia.", align = 'cccccccc')  -> tabla_resumen
+  
+    
+    
+    
+    
+    ggplot(data = base_777, aes(variable)) +
+            
+            geom_histogram(aes(y = ..density..), alpha = 0.3, fill = 'black', col = "black") +
+            
+            geom_density(fill = 'black', col = 'black', alpha = 0.3) + 
+            
+            labs(y = "Densidad", x = "2RSSonrisaPl")  +
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen    
+    
+    
+    } else if(is.factor(variable) | is.character(variable)) {
+      
+
+          
+      no.na <- which(is.na(variable) == F)
+      
+      variable <- variable %>% "[" (no.na)  
+      
+      
+      
+      data.frame(table(variable), (round(prop.table(table(variable))*100, 2))) -> tabla_tmp
+      
+      
+      
+      tabla_tmp <- tabla_tmp[, -3] 
+      
+
+      p.p <- tabla_tmp[, c(1,3)]
+      
+      colnames(p.p) <- c("Relativa.variable", "Relativa.Freq")
+      
+     tabla_tmp %>% data.frame() %>% 
+     
+     setNames(c("Categoría", "Frecuencia abs", "Frecuencia rel. (%)")) %>% 
+     
+     kable(caption = "Tabla de Frecuencia", align = 'lcc') -> tabla_resumen
+     
+       
+         
+              ggplot(data = p.p,  aes(x = Relativa.variable, y = (Relativa.Freq))) + 
+               
+              geom_bar(width = 1, stat = "identity", position="stack", col="black", alpha = 0.3) +
+              
+              coord_flip() +
+              
+              geom_text(aes(label = percent(Relativa.Freq/100)), 
+                      
+                        hjust = -.2 , color = "black", size=3.4) +
+              
+              labs(x = "Categoría", y = "2RSSonrisaPl") +
+              
+              ylim(0, (max(p.p$Relativa.Freq) + 10))  + 
+      theme_light(base_family = "Times New Roman") -> grafico1_resumen
+             
+             
+     
+      
+           
+            
+          #   ggplot(data = p.p, aes(x = "", fill = Relativa.variable,
+          #                          
+          #                          y = (Relativa.Freq))) +
+          #     
+          #     theme(plot.background = element_rect(fill = "grey98")) + 
+          #     
+          #     geom_bar(width = 1, stat = "identity", col = "grey90") +
+          #     
+          #     coord_polar("y", start=0) + ylab("") +
+          #     
+          #     geom_text(aes(label = percent(Relativa.Freq/100)), color="black", 
+          #               
+          #               size = 3, vjust = .2, position = position_stack(vjust = .5)) +
+          #     
+          #     scale_colour_gradient(low = "#132B43", high = "#56B1F7",space = "Lab",
+          #                            
+          #                            na.value = "grey50", guide = "colourbar",
+          #                            
+          #                            aesthetics = "colour") +
+          #     
+          #     labs(caption = paste('Variable: ', , '\n', 'Descripción: ', "Después de mis prácticas sexuales sonrío plácidamente" ))
+          #   
+           
+      
+        
+      
+  } 
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+tabla_resumen
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Figura: distribución de valores de Después de mis prácticas sexuales sonrío plácidamente (`2RSSonrisaPl`). Fuente: elaboración propia."}
+grafico1_resumen
+
+```

@@ -1,0 +1,18 @@
+### nombre_variable
+
+A continuación se muestran las estasdísticas descriptivas de la variable nombre_variable `(rotulo_variable)`  
+
+```{r}
+
+if(is.numeric(rotulo_variable) == T ){
+
+  pander(summary(nombre_data.frame[["rotulo_variable"]]))
+    
+} else {
+
+        pander(table(nombre_data.frame[["rotulo_variable"]]))
+
+        }
+
+
+```

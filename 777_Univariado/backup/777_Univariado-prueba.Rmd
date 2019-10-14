@@ -1,0 +1,269 @@
+---
+title: "Univariado 777"
+author: "Norberto  Andres Camacho Hincapie"
+output:
+  word_document: default
+  html_document: default
+  rmarkdown::html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+
+library(dplyr)
+library(ggplot2)
+library(scales)
+library(googlesheets)
+library("RColorBrewer")
+library(readxl)
+library(magrittr)
+library(knitr)
+library(kableExtra)
+
+options(knit.r.table.format = "latex")
+
+"https://docs.google.com/spreadsheets/d/1b_JeK80JiYfLBkn0H2Cm9DgC47O_N-JnZHu-C7uZ5Wc/edit?usp=sharing"->link2
+
+link2 %>% gs_url(lookup = FALSE, verbose = FALSE) %>% gs_read_listfeed(range=NULL) -> diccionario777
+
+
+"https://docs.google.com/spreadsheets/d/10qllwE4T_imJ6cJxh-INzfDMC7ZddpYjZFKKl4aCryk/edit?usp=sharing"-> link
+
+
+link %>% gs_url(lookup = FALSE, verbose = FALSE) %>% gs_read_listfeed(range=NULL)%>% setNames(diccionario777[["rotulo"]])  -> base777
+
+base777 %>% "[" (,c("EDAD","EDPR","PSDV","PSUA")) %>% apply(2,as.numeric)->base777[,c("EDAD","EDPR","PSDV","PSUA")]
+
+```
+
+
+```{r fig.width = 7.5, fig.height = 5.5, dpi = 144, echo=F,warning=FALSE,message=FALSE}
+
+univariado<-function(base,diccionario){
+
+  diccionario %>% apply(1,function(i){
+  
+     "["(i,3)->nombr
+  
+    "["(i,4)->cap
+    
+  base[[nombr]]->variable
+ 
+  if(is.numeric(variable)==TRUE){
+    
+         nombr %>% kable()  %>% print()
+
+    
+  resum<-c(mean(variable,na.rm = T), var(variable,na.rm = T),
+             sd(variable,na.rm = T),min(variable,na.rm = T), max(variable,na.rm = T))
+    
+    matrix(c(resum),ncol = 1)->pp 
+    
+    c('Media','Varianza','Desviacion Estandar','Mínimo','Máximo') -> row.names(pp)
+    
+   pp %>% data.frame()  %>% kable(caption = paste('Resumen de',nombr)) %>% print()
+    
+    print(ggplot(data=base,aes(variable))+
+            
+            geom_histogram(aes(y=..density..),alpha=0.3,fill='blue')+
+            
+            geom_density(fill='red',col='red',alpha=0.3)+theme(plot.background = element_rect(fill = "grey98"))+
+            
+            labs(caption=paste('Variable: ',nombr,'\n','Descripción: ',cap)))
+    
+    c()
+    }else if(is.character(variable)==TRUE){
+      
+      nombr %>% kable(caption = "Variable")  %>% print()
+        
+      no.na=which(is.na(variable)==F)
+      
+      variable=variable[no.na]
+      
+      data.frame(table(variable),prop.table(table(variable))*100)->pp
+      
+      
+      
+      pp=pp[,-3]
+      colnames(pp)=c("variable","Absoluta","Relativa (%)")
+      
+      p.p=pp[,c(1,3)]
+      colnames(p.p)=c("Relativa.variable","Relativa.Freq")
+      
+      pp %>% kable(caption = "Tabla de Frecuencia ")  %>% print()
+      
+      
+     c()
+       print(ggplot(data=p.p, aes(x=Relativa.variable,y=(Relativa.Freq)))+geom_bar(width = 1,stat = "identity")+
+              
+              ggtitle("Porcentaje")+ ylab("")+ coord_flip()+
+              
+              geom_text(aes(label=percent(Relativa.Freq/100)), hjust=-.2 ,color="black", size=3.4)+
+              
+              theme(plot.background = element_rect(fill = "grey98")) +
+              
+              labs(caption=paste('Variable: ',nombr,'\n','Descripción: ',cap))+
+              
+              ylim(0,(max(p.p$Relativa.Freq)+10)))
+     
+      
+      print(ggplot(data=p.p, aes(x="",fill= Relativa.variable,y=(Relativa.Freq)))+
+              
+              theme(plot.background = element_rect(fill = "grey98"))+geom_bar(width = 1,stat = "identity")+
+              
+              coord_polar("y", start=0)+ggtitle("Porcentaje (>1%)")+ ylab("")+
+              
+              geom_text(aes(label=percent(Relativa.Freq/100)),color="black", size=3,vjust=.2,position = position_stack(vjust = .5))+
+              
+              scale_colour_gradient( low = "#132B43", high = "#56B1F7",space = "Lab", na.value = "grey50", guide =    
+                                       "colourbar",aesthetics = "colour")+
+              
+              labs(caption=paste('Variable: ',nombr,'\n','Descripción: ',cap)))
+        c()
+      
+  } else{
+      
+      nombr %>% kable(caption = "Variable")  %>% print()
+      
+      no.na=which(is.na(variable) == F)
+      
+      variable=variable[no.na]
+      
+      levels(variable)<-orden
+      
+      data.frame(table(variable),prop.table(table(variable))*100)->pp
+      
+      
+      
+      pp=pp[,-3]
+      colnames(pp)=c("variable","Absoluta","Relativa (%)")
+      
+      p.p=pp[,c(1,3)]
+      colnames(p.p)=c("Relativa.variable","Relativa.Freq")
+      
+      pp %>% kable(caption = "Tabla de Frecuencia ")  %>% print.table()
+        
+      
+      print(ggplot(data=p.p, aes(x=Relativa.variable,y=(Relativa.Freq)))+geom_bar(width = 1,stat = "identity")+
+              
+              ggtitle("Porcentaje")+ ylab("")+ coord_flip()+
+              
+              geom_text(aes(label=percent(Relativa.Freq/100)), hjust=-.2 ,color="black", size=3.4)+
+              
+              theme(plot.background = element_rect(fill = "grey98")) +
+              
+              labs(caption=paste('Variable: ',nombr,'\n','Descripción: ',cap))+
+              
+              ylim(0,(max(p.p$Relativa.Freq)+10)))
+      
+      print(ggplot(data=p.p, aes(x="",fill= Relativa.variable,y=(Relativa.Freq)))+
+              
+              theme(plot.background = element_rect(fill = "grey98"))+geom_bar(width = 1,stat = "identity")+
+              
+              coord_polar("y", start=0)+ggtitle("Porcentaje (>1%)")+ ylab("")+
+              
+              geom_text(aes(label=percent(Relativa.Freq/100)),color="black", size=3,vjust=.2,position = position_stack(vjust = .5))+
+              
+              scale_colour_gradient( low = "#132B43", high = "#56B1F7",space = "Lab", na.value = "grey50", guide =    
+                                       "colourbar",aesthetics = "colour")+
+              
+              labs(caption=paste('Variable: ',nombr,'\n','Descripción: ',cap)))
+        c()
+      
+  }
+  }
+  )
+  }
+```
+
+
+# Caracterización
+
+
+```{r fig.width = 7.5, fig.height = 5.5, dpi = 144, echo=F,warning=FALSE,message=FALSE,results='asis'}
+
+ 
+
+seccion="Caracterización"
+
+which(diccionario777[["seccion"]]==seccion)->pos.seccion
+
+diccionario777[pos.seccion,]->dicc_seccion
+
+base777 %>% "["(dicc_seccion[["rotulo"]] %>% as.matrix() %>% as.vector())->base_seccion
+
+univariado(base_seccion,dicc_seccion)
+
+
+```
+
+#Práctica
+
+```{r fig.width = 7.5, fig.height = 5.5, dpi = 144, echo=F,warning=FALSE,message=FALSE,results='asis'}
+
+
+seccion="Práctica"
+
+which(diccionario_777[["seccion"]]==seccion)->pos.seccion
+
+diccionario_777[pos.seccion,]->dicc_seccion
+
+base777 %>% "["(dicc_seccion[["rotulo"]] %>% as.matrix() %>% as.vector())%>% apply(2, factor) %>% as.data.frame()->base_seccion
+
+orden=c("En el último mes.","Últimos 3 meses.","Últimos 6 meses.","Último año.","Más de un año.","Nunca/No aplica.")
+
+
+univariado(base_seccion,dicc_seccion)
+
+```
+
+
+#Riesgo percibido 
+
+
+```{r fig.width = 7.5, fig.height = 5.5, dpi = 144, echo=F,warning=FALSE,message=FALSE,results='asis'}
+
+
+
+seccion="Percepción de riesgo"
+
+which(diccionario777[["seccion"]]==seccion)->pos.seccion
+
+diccionario777[pos.seccion,]->dicc_seccion
+
+base777 %>% "["(dicc_seccion[["rotulo"]] %>% as.matrix() %>% as.vector()) %>% apply(2, factor) %>% as.data.frame()->base_seccion
+
+orden=c("Totalmente De Acuerdo","De Acuerdo","Ni de acuerdo ni en desacuerdo", "En Desacuerdo","Totalmente en Desacuerdo")
+
+
+univariado(base_seccion,dicc_seccion)
+
+```
+
+#Satisfacción sexual
+
+
+```{r fig.width = 7.5, fig.height = 5.5, dpi = 144, echo=F,warning=FALSE,message=FALSE,results='asis'}
+ 
+
+seccion="Satisfacción sexual"
+
+which(diccionario777[["seccion"]]==seccion)->pos.seccion
+
+diccionario777[pos.seccion,]->dicc_seccion
+
+base777 %>% "["(dicc_seccion[["rotulo"]] %>% as.matrix() %>% as.vector())%>% apply(2, factor) %>% as.data.frame()->base_seccion
+
+orden=c("Siempre","Casi Siempre","Casi Nunca","Nunca")
+
+ncol(base_seccion)
+
+univariado(base_seccion,dicc_seccion)
+```
+
+

@@ -1,0 +1,195 @@
+---
+title: "777 Univariado"
+output:
+  word_document:
+    reference_docx: Plantilla_APA.docx
+    keep_md: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.height = 3.5, fig.width = 7)
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, cache=FALSE}
+
+###########
+# UTF-8
+############
+
+library("jtools")
+library("knitr")
+library("ggplot2")
+library("stringr")
+library("dplyr")
+library("scales")
+library("googlesheets")
+library("RColorBrewer")
+library("magrittr")
+
+library("extrafont")
+
+
+loadfonts()
+
+
+
+
+readRDS("diccionario_777.rds") -> diccionario_777
+  
+readRDS("datos_777.rds") -> base_777
+
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+codigo_uni <- "univariado.txt"
+
+fileconn <- file(codigo_uni)
+readLines(con = fileconn) -> plantilla
+close(fileconn)
+
+
+
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+
+univariado <- function(nombre_base, diccionario, plantilla_rmd){
+
+ rmd <- character()
+
+  for(i in seq(nrow(diccionario))){
+
+      reemplazo_1 <- str_replace_all(plantilla_rmd, "nombre_base_777", nombre_base)
+      reemplazo_2 <- str_replace_all(reemplazo_1, "nombre_variable", as.character(diccionario[["rotulo"]][i]))
+      reemplazo_3 <- str_replace_all(reemplazo_2, "cap_text", as.character(diccionario[["texto"]][i]))
+
+      paste(reemplazo_3, collapse = "\n") -> rmd[i]
+      
+  }
+ 
+ paste(rmd, collapse = "\n")
+ 
+}
+ 
+ 
+     
+```
+
+
+
+
+
+# Caracterización
+
+
+
+
+A continuación se muestran los estadísticos descriptivos de las variables correspondientes a la Caracterización de la muestra...
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+univariado("base_777", subset(diccionario_777, seccion == "Caracterización"), plantilla) -> child
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+child_file <- "child-1.rmd"
+
+fileconn <- file(child_file)
+writeLines(child, con = fileconn)
+close(fileconn)
+
+
+```
+
+
+```{r child = child_file}
+```
+
+# Práctica
+
+
+A continuación se muestran los estadísticos descriptivos de las variables correspondientes a la Práctica de la muestra...
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+univariado("base_777", subset(diccionario_777, seccion == "Práctica"), plantilla) -> child
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+child_file <- "child-2.rmd"
+
+fileconn <- file(child_file)
+writeLines(child, con = fileconn)
+close(fileconn)
+
+
+```
+
+
+```{r child = child_file}
+```
+
+# Percepción de riesgo
+
+
+
+
+A continuación se muestran los estadísticos descriptivos de las variables correspondientes a la Percepción de riesgo de la muestra...
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+univariado("base_777", subset(diccionario_777, seccion == "Percepción de riesgo"), plantilla) -> child
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+child_file <- "child-3.rmd"
+
+fileconn <- file(child_file)
+writeLines(child, con = fileconn)
+close(fileconn)
+
+
+```
+
+
+```{r child = child_file}
+```
+
+# Satisfacción sexual
+
+
+
+
+A continuación se muestran los estadísticos descriptivos de las variables correspondientes a la Satisfacción sexual de la muestra...
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+univariado("base_777", subset(diccionario_777, seccion == "Satisfacción sexual"), plantilla) -> child
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+child_file <- "child-4.rmd"
+
+fileconn <- file(child_file)
+writeLines(child, con = fileconn)
+close(fileconn)
+
+
+```
+
+
+```{r child = child_file}
+```
+

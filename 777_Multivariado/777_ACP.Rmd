@@ -1,0 +1,1983 @@
+---
+title: "777 Multivariado"
+output:
+  word_document:
+    reference_docx: Plantilla_APA.docx
+always_allow_html: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, cache=FALSE}
+
+######
+# UTF-8
+######
+
+
+library("lavaan")
+library("lavaanPlot")
+library("nortest")
+library("ltm")
+library("tidyr")
+library("jtools")
+library("ggplot2")
+library("stringr")
+library("dplyr")
+library("scales")
+library("googlesheets")
+library("RColorBrewer")
+library("magrittr")
+library("mice")
+library("ltm")
+library("corrplot")
+library("FactoMineR")
+library("ggrepel")
+library("knitr")
+library("purrr")
+library("mice")
+library("extrafont")
+library("pander")
+library("psych")
+
+
+
+# opts_chunk$set(include = FALSE)
+
+loadfonts()
+
+readRDS("diccionario_777.rds") -> diccionario_777
+
+readRDS("datos-num_777.rds") -> num_777
+
+
+
+Scale_01 <- function(x){(x - min(x))/(max(x) - min(x))}
+
+#diccionario_777 %>% select(seccion, Factor) %>% unique %>% na.omit %>% filter(seccion != "satisfacción sexual") -> fact_dicc
+
+diccionario_777 %>% select(seccion, Factor) %>% unique %>% na.omit -> fact_dicc
+
+# c("Actividad Sexual", "Consecuencia" , "Cuidado", "Elección", "comunicacíon", "Reacción emocional") -> fact_dicc
+
+fitted_factors <- list()
+
+```
+
+# Percepción de riesgo
+
+En esta sección se presentan los resultados asociados al formulario de Percepción de riesgo. 
+
+```{r}
+tabla_final <- data.frame(Pruebas = c("Alpha de Cronbach", "Guttman's Lambda 6", "Shapiro Wilks", "Lilliefors"))
+
+
+tryCatch(
+  load_cache("res_as", "tabla_final_1"),
+  error = function(e) data.frame(a = 1)
+  ) %>% 
+  kable(digits = 2, caption = "Tabla: Pruebas para cada factor de Percepción de riesgo. Fuente: elaboración propia.")
+
+
+```
+
+
+## Actividad Sexual
+
+
+```{r}
+
+which(fact_dicc$Factor == "Actividad Sexual")[1] -> pos_fac
+which(fact_dicc$seccion == "Percepción de riesgo")[1] -> pos_sec
+
+diccionario_777$rotulo[which(diccionario_777$Factor == fact_dicc$Factor[pos_fac] & diccionario_777$seccion == fact_dicc$seccion[pos_sec])] -> rotulo_f1
+
+diccionario_777 %>% filter(rotulo %in% rotulo_f1) %>% 
+  mutate(descrip = str_c(rotulo, texto, sep = ": ")) %$% 
+  paste(descrip, collapse = ". ") -> fig_caption
+
+num_777  %>% "[" (rotulo_f1) %>% mutate(MT = 1:nrow(num_777)) -> base_activ #Actividad Sexual
+
+
+```
+
+A continuación se muestra el análisis realizado para las preguntas correspondientes al formulario de Percepción de riesgo asociadas con el constructo de actividad sexual^[`r fig_caption`].
+
+
+### Análisis de correlación múltiple
+
+En primera instancia se calcula la matriz de correlaciones. En este gráfico es importante encontrar correlaciones fuertes entre los ítems, al menos mayores a 0.5.
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, error=FALSE, fig.height= 4, fig.width = 4, fig.cap = "Figura: Matriz de correlaciones de Actividad Sexual. Fuente: elaboración propia."}
+
+
+col <- colorRampPalette(c("#ccc000", "#ddd999", "#eeeeee", "#999ddd", "#000ccc"))
+
+base_activ[,-which(colnames(base_activ) == "MT" )] %>% cor %>% corrplot.mixed(lower = "number", upper = "color", family = "Times New Roman", lower.col = "#aaaaaa", number.cex = 0.6, tl.cex = 0.6)
+  
+  
+
+# + theme_light(base_family = "Times New Roman") -> a # esto no es ggplot, jajajajajajaja
+
+```
+
+Se muestra también el gráfico de sedimentacián, donde se establece la cantidad de varianza retenida en cada eje. **(toca decidir cuál de los dos dejar)**
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, results='markup'}
+base_activ[,-which(colnames(base_activ) == "MT" )] %>% PCA(graph = FALSE) -> pca
+
+factor_name <- paste(
+fact_dicc[["seccion"]][pos_sec],
+fact_dicc[["Factor"]][pos_fac]
+)
+
+pca %$% ind %$% coord %>% 
+  as.data.frame %$% 
+  Dim.1 -> fitted_factors[[factor_name]]
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pca %$% as.data.frame(eig) %>% mutate(Eje = 1:nrow(.), eigen_cum = cumsum(eigenvalue)) -> eig
+
+```
+
+
+```{r echo = FALSE, warning=FALSE,fig.height= 3, fig.width = 7, fig.cap = "Figura: Gráfico de sedimentación de Actividad Sexual. Fuente: Elaboración propia."}
+eig %>% ggplot + 
+  geom_line(aes(x = Eje, y = eigenvalue)) +
+  geom_point(aes(x = Eje, y = eigenvalue))  + 
+  labs(y = "Autovalores", x = "Eje")  +
+  scale_x_continuous(breaks = 1:nrow(eig)) +
+  scale_y_continuous(limits = c(0, max(eig$eigenvalue + 0.1))) +
+  theme_light(base_family = "Times New Roman")
+
+```
+
+
+```{r echo = FALSE, warning=FALSE, fig.height= 3, fig.width = 7, fig.cap = "Figura: Gráfico de sedimentación de Actividad Sexual. En azul el porcentaje de varianza explicado por cada eje, en rojo el porcentaje acumulado. Fuente: Elaboración propia."}
+eig %>% setNames(letters[1:ncol(.)]) %>% ggplot + 
+  geom_line(aes(x = d, y = b), colour = "#0088dd") +
+  geom_point(aes(x = d, y = b), colour = "#0088dd")  + 
+  geom_line(aes(x = d, y = c), colour = "#dd8800") +
+  geom_point(aes(x = d, y = c), colour = "#dd8800")  + 
+  labs(y = "Varianza", x = "Eje")  +
+  scale_x_continuous(breaks = 1:nrow(eig)) +
+  scale_y_continuous(limits = c(0, max(eig$c + 0.1))) +
+  theme_light(base_family = "Times New Roman")
+
+
+```
+
+Acto seguido es posible observar el círculo de correlaciones correspondiente. En este gráfico los ítems se visualizan como flechas. Cuando estas flechas apuntan todas en la misma dirección se tiene un buen nivel de consistencia interna.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.height= 5, fig.width = 6, fig.cap = "Figura: círculo de correlaciones de Actividad Sexual. Fuente: Elaboración propia."}
+
+plot_size <- 1.2
+
+  pca %$% var %$% coord %>% as.data.frame %>% mutate(variable = rownames(.)) %>% 
+  ggplot + 
+  geom_hline(aes(yintercept = 0), size=.2) + 
+  geom_vline(aes(xintercept = 0), size=.2) +
+  geom_segment(aes(x = 0, y = 0, xend = Dim.1, yend = Dim.2), colour = "#222222", arrow = arrow(type = "closed", length = unit(x = 0.3, units = "cm"))) +
+  geom_label_repel(alpha = 1, size = 5, aes(x = Dim.1, y = Dim.2, label = variable), family = "Times New Roman") +
+  labs(x = "Primer factor", y = "Segundo factor") + 
+  xlim(-plot_size, plot_size) +
+  ylim(-plot_size, plot_size) +
+  coord_fixed()  +
+  theme_light(base_family = "Times New Roman") + 
+  annotate(
+    "path",
+    x= cos(seq(0,2*pi,length.out=100)),
+    y= sin(seq(0,2*pi,length.out=100))
+  )
+
+```
+
+
+### Análisis de consistencia interna
+
+Para evaluar la consistencia interna es posible usar varios estadísticos. Entre ellos el Alpha de Cronbach y el Lambda 6 de Guttman. que se muestran a continuación.
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+base_activ[,-which(colnames(base_activ) == "MT" )] %>% alpha() -> reability
+
+pca %$% ind %$% coord %>% as.data.frame %$%
+  shapiro.test(Dim.1) -> shapiro_wilks
+
+
+pca %$% ind %$% coord %>% as.data.frame %$%
+  lillie.test(Dim.1) -> lilliefors
+
+tabla_final[["Act_Sex"]] = c(reability$total$raw_alpha, reability$total$`G6(smc)`, shapiro_wilks$p.value, lilliefors$p.value)
+
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+data.frame(
+  x1 = min(reability[["item.stats"]][["n"]]),
+  x2 = reability$nvar,
+  x3 = reability[["total"]][["raw_alpha"]],
+  x4 = reability[["total"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("Individuos", "ítems", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman para Actividad Sexual. Fuente: elaboración propia.")
+
+```
+
+Para evaluar la calidad de los ítems se calcula la consistencia interna retirando uno por uno. La siguiente tabla muestra el Análisis realizado al interior de los ítems, corroborando su pertinencia.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+data.frame(
+  x0 = rownames(reability[["alpha.drop"]]),
+  x1 = reability[["item.stats"]][["n"]],
+  x3 = reability[["alpha.drop"]][["raw_alpha"]],
+  x4 = reability[["alpha.drop"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("ítems","Individuos", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman retirando cada ítem para Actividad Sexual. Fuente: elaboración propia.")
+
+```
+
+En la tabla Alpha de Cronbach y Lambda 6 de Guttman retirando cada ítem para Actividad Sexual, podemos observar la consistencia interna para cada ítem con el número de individuos correspondiente.
+
+### Normalidad del primer factor
+
+Para la Construcción posterior de modelos psicométricos, es relevante comprobar supuestos estadísticos usuales. Para ello se aplican dos pruebas de normalidad conocidas, Shapiro-Wilks y Lilliefors siendo la primera una de las más potentes reportadas.
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(shapiro_wilks, caption = "Tabla: Prueba de normalidad de Shapiro-Wilks para Actividad Sexual. Fuente: elaboración propia.")
+
+```
+
+La prueba de Shapiro-Wilks nos indica si los datos de la muestra siguen una distribución normal, si el alpha es mayor al P value rechazo la hipótesis nula lo que me indica que no sigue una distribución normal.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(lilliefors, caption = "Tabla: Prueba de normalidad de Lilliefors para Actividad Sexual. Fuente: elaboración propia.")
+
+```
+El test de kolmogorov-smirnov nos muestra la bondad de ajuste, al realizarse un ajuste se obtuvo el test de lillefors el cual nos sirve para probar la normalidad de los datos.
+
+## Elección
+
+### Análisis de correlación múltiple
+
+En primera instancia se calcula la matriz de correlaciones. En este gráfico es importante encontrar correlaciones fuertes entre los ítems, al menos mayores a 0.5.
+
+```{r}
+
+which(fact_dicc$Factor == "Elección")[1] -> pos_fac
+which(fact_dicc$seccion == "Percepción de riesgo")[1] -> pos_sec
+
+
+diccionario_777$rotulo[which(diccionario_777$Factor == fact_dicc$Factor[pos_fac] & diccionario_777$seccion == fact_dicc$seccion[pos_sec])] -> rotulo_f1
+
+num_777  %>% "[" (rotulo_f1) %>% mutate(MT = 1:nrow(num_777)) -> base_elec #Elección
+
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, error=FALSE, fig.height= 4, fig.width = 4, fig.cap = "Figura: Matriz de correlaciones de Elección. Fuente: elaboración propia."}
+
+
+col <- colorRampPalette(c("#ccc000", "#ddd999", "#eeeeee", "#999ddd", "#000ccc"))
+
+base_elec[,-which(colnames(base_elec) == "MT" )] %>% cor %>% corrplot.mixed(lower = "number", upper = "color", family = "Times New Roman", lower.col = "#aaaaaa", number.cex = 0.6, tl.cex = 0.6)
+
+```
+
+El grafico Matriz de correlación de elección, nos muestra los ítems y su correlación, la escala de colores nos muestra que entre más oscuro es el color azul mayor es la correlación. La correlación más alta es de 0.26 de los ítems MPMS y ERSM.
+
+
+Se muestra también el gráfico de sedimentación, donde se establece la cantidad de varianza retenida en cada eje. **(toca decidir cuál de los dos dejar)**
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, results='markup'}
+base_elec[,-which(colnames(base_elec) == "MT" )] %>% PCA(graph = FALSE) -> pca
+
+factor_name <- paste(
+fact_dicc[["seccion"]][pos_sec],
+fact_dicc[["Factor"]][pos_fac]
+)
+
+pca %$% ind %$% coord %>% 
+  as.data.frame %$% 
+  Dim.1 -> fitted_factors[[factor_name]]
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pca %$% as.data.frame(eig) %>% mutate(Eje = 1:nrow(.), eigen_cum = cumsum(eigenvalue)) -> eig
+
+```
+
+
+```{r echo = FALSE, warning=FALSE,fig.height= 3, fig.width = 7, fig.cap = "Figura: gráfico de sedimentación de Elección. Fuente: elaboración propia."}
+eig %>% ggplot + 
+  geom_line(aes(x = Eje, y = eigenvalue)) +
+  geom_point(aes(x = Eje, y = eigenvalue))  + 
+  labs(y = "Autovalores", x = "Eje")  +
+  scale_x_continuous(breaks = 1:nrow(eig)) +
+  scale_y_continuous(limits = c(0, max(eig$eigenvalue + 0.1))) +
+  theme_light(base_family = "Times New Roman")
+
+```
+En el gráfico anterior podemos la comparación de los autovalores con el número de ejes observar el porcentaje de varianza explicado por cada eje, podemos observar que desde el eje 5 los autovalores no tienen un cambio significativo por lo que se genera una recta.
+
+```{r echo = FALSE, warning=FALSE, fig.height= 3, fig.width = 7, fig.cap = "Figura: gráfico de sedimentación de Elección. En azul el porcentaje de varianza explicado por cada eje, en rojo el porcentaje acumulado. Fuente: elaboración propia."}
+eig %>% setNames(letters[1:ncol(.)]) %>% ggplot + 
+  geom_line(aes(x = d, y = b), colour = "#0088dd") +
+  geom_point(aes(x = d, y = b), colour = "#0088dd")  + 
+  geom_line(aes(x = d, y = c), colour = "#dd8800") +
+  geom_point(aes(x = d, y = c), colour = "#dd8800")  + 
+  labs(y = "Varianza", x = "Eje")  +
+  scale_x_continuous(breaks = 1:nrow(eig)) +
+  scale_y_continuous(limits = c(0, max(eig$c + 0.1))) +
+  theme_light(base_family = "Times New Roman")
+
+
+```
+
+En rojo tenemos el porcentaje acumulado de varianza explicada dependiendo el numero de ejes, para retener el 50% de la varianza se necesitan 3 ejes, podemos ver un crecimiento lento en el porcentaje de varianza explicada.
+
+
+Acto seguido es posible observar el círculo de correlaciones correspondiente. En este gráfico los ítems se visualizan como flechas. Cuando estas flechas apuntan todas en la misma dirección se tiene un buen nivel de consistencia interna.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.height= 5, fig.width = 6, fig.cap = "Figura: círculo de correlaciones de Elección. Fuente: elaboración propia."}
+
+plot_size <- 1.2
+
+  pca %$% var %$% coord %>% as.data.frame %>% mutate(variable = rownames(.)) %>% 
+  ggplot + 
+  geom_hline(aes(yintercept = 0), size=.2) + 
+  geom_vline(aes(xintercept = 0), size=.2) +
+  geom_segment(aes(x = 0, y = 0, xend = Dim.1, yend = Dim.2), colour = "#222222", arrow = arrow(type = "closed", length = unit(x = 0.3, units = "cm"))) +
+  geom_label_repel(alpha = 1, size = 5, aes(x = Dim.1, y = Dim.2, label = variable), family = "Times New Roman") +
+  labs(x = "Primer factor", y = "Segundo factor") + 
+  xlim(-plot_size, plot_size) +
+  ylim(-plot_size, plot_size) +
+  coord_fixed()  +
+  theme_light(base_family = "Times New Roman") + 
+  annotate(
+    "path",
+    x= cos(seq(0,2*pi,length.out=100)),
+    y= sin(seq(0,2*pi,length.out=100))
+  )
+
+```
+El círculo de correlaciones de Elección en su eje x tiene el primer factor y en su eje y el segundo factor, en este grafico las variables se encuentran simbolizadas por una flecha con una longitud, dentro de un círculo centrado con radio 1, podemos ver que todos los ítems van en la misma dirección.
+
+### Análisis de consistencia interna
+
+Para evaluar la consistencia interna es posible usar varios estadísticos. Entre ellos el Alpha de Cronbach y el Lambda 6 de Guttman. que se muestran a continuación.
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+base_elec[,-which(colnames(base_elec) == "MT" )] %>% alpha() -> reability_ele
+
+pca %$% ind %$% coord %>% as.data.frame %$%
+  shapiro.test(Dim.1) -> shapiro_wilks_ele
+
+
+pca %$% ind %$% coord %>% as.data.frame %$%
+  lillie.test(Dim.1) -> lilliefors_ele
+
+tabla_final[["Elec"]] = c(reability_ele$total$raw_alpha, reability_ele$total$`G6(smc)`, shapiro_wilks_ele$p.value, lilliefors_ele$p.value)
+
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+data.frame(
+  x1 = min(reability_ele[["item.stats"]][["n"]]),
+  x2 = reability_ele$nvar,
+  x3 = reability_ele[["total"]][["raw_alpha"]],
+  x4 = reability_ele[["total"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("Individuos", "ítems", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman para Elección. Fuente: elaboración propia.")
+
+```
+En la tabla podemos observar dos estadísticos de consistencia interna, el Alpha de Cronbach y Guttman´s lambda 6 con los 809 individuos y los 8 ítems, el Guttman´s nos muestra la consistencia interna.
+
+Para evaluar la calidad de los ítems se calcula la consistencia interna retirando uno por uno. La siguiente tabla muestra el Análisis realizado al interior de los ítems, corroborando su pertinencia.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+data.frame(
+  x0 = rownames(reability_ele[["alpha.drop"]]),
+  x1 = reability_ele[["item.stats"]][["n"]],
+  x3 = reability_ele[["alpha.drop"]][["raw_alpha"]],
+  x4 = reability_ele[["alpha.drop"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("ítems","Individuos", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman retirando cada ítem para Elección. Fuente: elaboración propia.")
+
+```
+Podemos ver el Alpha de Cronbach y lambda 6 de Guttman por cada ítem, el cual nos muestra la consistencia de cada uno de los ítems tomando los 809 individuos.
+
+### Normalidad del primer factor
+
+Para la Construcción posterior de modelos psicométricos, es relevante comprobar supuestos estadísticos usuales. Para ello se aplican dos pruebas de normalidad conocidas, Shapiro-Wilks y Lilliefors siendo la primera una de las más potentes reportadas.
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(shapiro_wilks_ele, caption = "Tabla: Prueba de normalidad de Shapiro-Wilks para Elección. Fuente: elaboración propia.")
+
+```
+
+ La prueba de Shapiro- Wilks  nos indica si los datos de la muestra siguen una distribución normal, si el apha es mayor al P value rechazo la hipótesis nula. 
+La hipótesis nula nos indica si los datos siguen una distribución normal.
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(lilliefors_ele, caption = "Tabla: Prueba de normalidad de Lilliefors para Elección. Fuente: elaboración propia.")
+
+```
+El test de kolmogorov-smirnov nos muestra la bondad de ajuste, al realizarse un ajuste se obtuvo el test de lillefors el cual nos sirve para probar la normalidad de los datos, se busca no rechazar la hipótesis nula para esto el Alpha debe ser menor que el P value.
+
+## Consecuencia
+
+### Análisis de correlación múltiple
+
+En primera instancia se calcula la matriz de correlaciones. En este gráfico es importante encontrar correlaciones fuertes entre los ítems, al menos mayores a 0.5.
+
+```{r}
+
+which(fact_dicc$Factor == "Consecuencia")[1] -> pos_fac
+which(fact_dicc$seccion == "Percepción de riesgo")[1] -> pos_sec
+
+
+diccionario_777$rotulo[which(diccionario_777$Factor == fact_dicc$Factor[pos_fac] & diccionario_777$seccion == fact_dicc$seccion[pos_sec])] -> rotulo_f1
+
+num_777  %>% "[" (rotulo_f1) %>% mutate(MT = 1:nrow(num_777)) -> base_conse # Consecuencia
+
+
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, error=FALSE, fig.height= 4, fig.width = 4, fig.cap = "Figura: Matriz de correlaciones de Consecuencia. Fuente: elaboración propia."}
+
+col <- colorRampPalette(c("#ccc000", "#ddd999", "#eeeeee", "#999ddd", "#000ccc"))
+
+base_conse[,-which(colnames(base_conse) == "MT" )] %>% cor %>% corrplot.mixed(lower = "number", upper = "color", family = "Times New Roman", lower.col = "#aaaaaa", number.cex = 0.6, tl.cex = 0.6)
+
+```
+En la Gráfica de la matriz de correlaciones de Consecuencia podemos observar la correlación de los ítems ENDR,RAEI y NAMC, entre mayor intensidad tenga el color azul mayor es la correlación entre los ítems, así mismo nos muestra los valores de la correlación.
+
+Se muestra también el gráfico de sedimentación, donde se establece la cantidad de varianza retenida en cada eje. **(toca decidir cuál de los dos dejar)**
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, results='markup'}
+base_conse[,-which(colnames(base_conse) == "MT" )] %>% PCA(graph = FALSE) -> pca
+
+factor_name <- paste(
+fact_dicc[["seccion"]][pos_sec],
+fact_dicc[["Factor"]][pos_fac]
+)
+
+pca %$% ind %$% coord %>% 
+  as.data.frame %$% 
+  Dim.1 -> fitted_factors[[factor_name]]
+
+```
+En el gráfico de sedimentación de consecuencia podemos observar los autovalores de los tres items y la varianza que explica cada eje dependiendo de su autovalor
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pca %$% as.data.frame(eig) %>% mutate(Eje = 1:nrow(.), eigen_cum = cumsum(eigenvalue)) -> eig
+
+```
+
+
+```{r echo = FALSE, warning=FALSE,fig.height= 3, fig.width = 7, fig.cap = "Figura: gráfico de sedimentación de Consecuencia. Fuente: elaboración propia."}
+eig %>% ggplot + 
+  geom_line(aes(x = Eje, y = eigenvalue)) +
+  geom_point(aes(x = Eje, y = eigenvalue))  + 
+  labs(y = "Autovalores", x = "Eje")  +
+  scale_x_continuous(breaks = 1:nrow(eig)) +
+  scale_y_continuous(limits = c(0, max(eig$eigenvalue + 0.1))) +
+  theme_light(base_family = "Times New Roman")
+
+```
+
+
+```{r echo = FALSE, warning=FALSE, fig.height= 3, fig.width = 7, fig.cap = "Figura: gráfico de sedimentación de Consecuencia. En azul el porcentaje de varianza explicado por cada eje, en rojo el porcentaje acumulado. Fuente: elaboración propia."}
+eig %>% setNames(letters[1:ncol(.)]) %>% ggplot + 
+  geom_line(aes(x = d, y = b), colour = "#0088dd") +
+  geom_point(aes(x = d, y = b), colour = "#0088dd")  + 
+  geom_line(aes(x = d, y = c), colour = "#dd8800") +
+  geom_point(aes(x = d, y = c), colour = "#dd8800")  + 
+  labs(y = "Varianza", x = "Eje")  +
+  scale_x_continuous(breaks = 1:nrow(eig)) +
+  scale_y_continuous(limits = c(0, max(eig$c + 0.1))) +
+  theme_light(base_family = "Times New Roman")
+
+
+```
+
+En el gráfico de sedimentación de consecuencia se puede observa la varianza retenida por cada eje y el acumulado de varianza retenida, se puede observar en la línea roja como con 2 ejes se retiene aproximadamente el 75% de la varianza.
+
+Acto seguido es posible observar el círculo de correlaciones correspondiente. En este gráfico los ítems se visualizan como flechas. Cuando estas flechas apuntan todas en la misma dirección se tiene un buen nivel de consistencia interna.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.height= 5, fig.width = 6, fig.cap = "Figura: círculo de correlaciones de Consecuencia. Fuente: elaboración propia."}
+
+plot_size <- 1.2
+
+  pca %$% var %$% coord %>% as.data.frame %>% mutate(variable = rownames(.)) %>% 
+  ggplot + 
+  geom_hline(aes(yintercept = 0), size=.2) + 
+  geom_vline(aes(xintercept = 0), size=.2) +
+  geom_segment(aes(x = 0, y = 0, xend = Dim.1, yend = Dim.2), colour = "#222222", arrow = arrow(type = "closed", length = unit(x = 0.3, units = "cm"))) +
+  geom_label_repel(alpha = 1, size = 5, aes(x = Dim.1, y = Dim.2, label = variable), family = "Times New Roman") +
+  labs(x = "Primer factor", y = "Segundo factor") + 
+  xlim(-plot_size, plot_size) +
+  ylim(-plot_size, plot_size) +
+  coord_fixed()  +
+  theme_light(base_family = "Times New Roman") + 
+  annotate(
+    "path",
+    x= cos(seq(0,2*pi,length.out=100)),
+    y= sin(seq(0,2*pi,length.out=100))
+  )
+
+```
+En el grafico de correlaciones de consecuencia, podemos ver los 3 factores que se encuentran simbolizados con una flecha que representa una longitud, los tres ítems tienen la misma dirección.
+
+### Análisis de consistencia interna
+
+Para evaluar la consistencia interna es posible usar varios estadísticos. Entre ellos el Alpha de Cronbach y el Lambda 6 de Guttman. que se muestran a continuación.
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+base_conse[,-which(colnames(base_conse) == "MT" )] %>% alpha() -> reability_cons
+
+pca %$% ind %$% coord %>% as.data.frame %$%
+  shapiro.test(Dim.1) -> shapiro_wilks_cons
+
+
+pca %$% ind %$% coord %>% as.data.frame %$%
+  lillie.test(Dim.1) -> lilliefors_cons
+
+tabla_final[["Cons"]] = c(reability_cons$total$raw_alpha, reability_cons$total$`G6(smc)`, shapiro_wilks_cons$p.value, lilliefors_cons$p.value)
+
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+data.frame(
+  x1 = min(reability_cons[["item.stats"]][["n"]]),
+  x2 = reability_cons$nvar,
+  x3 = reability_cons[["total"]][["raw_alpha"]],
+  x4 = reability_cons[["total"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("Individuos", "ítems", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman para Consecuencia. Fuente: elaboración propia.")
+
+```
+Se observan las pruebas de consistencia interna para los tres ítems que cuentan con 809 individuos, las medidas estadísticas que calculan por medio de la correlación.
+
+
+Para evaluar la calidad de los ítems se calcula la consistencia interna retirando uno por uno. La siguiente tabla muestra el Análisis realizado al interior de los ítems, corroborando su pertinencia.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+data.frame(
+  x0 = rownames(reability_cons[["alpha.drop"]]),
+  x1 = reability_cons[["item.stats"]][["n"]],
+  x3 = reability_cons[["alpha.drop"]][["raw_alpha"]],
+  x4 = reability_cons[["alpha.drop"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("ítems","Individuos", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman retirando cada ítem para Consecuencia. Fuente: elaboración propia.")
+
+```
+Se observan las medidas de consistencia para cada ítem, este se calcula con los 809 individuos y se evidencia el valor de las dos medidas estadísticas.
+
+### Normalidad del primer factor
+
+Para la Construcción posterior de modelos psicométricos, es relevante comprobar supuestos estadísticos usuales. Para ello se aplican dos pruebas de normalidad conocidas, Shapiro-Wilks y Lilliefors siendo la primera una de las más potentes reportadas.
+
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(shapiro_wilks_cons, caption = "Tabla: Prueba de normalidad de Shapiro-Wilks para Consecuencia. Fuente: elaboración propia.")
+
+```
+
+En esta tabla podemos observar los valores obtenidos para las dos pruebas de consistencia, el Alpha de Cronbach es un coeficiente que nos sirve para medir la consistencia interna, el valor máximo que puede tomar este coeficiente es 1 el cual indica una fiabilidad en la escala, por otro lado, el Guttman's Lambda 6 es aquel que considera la varianza de cada elemento.
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(lilliefors_cons, caption = "Tabla: Prueba de normalidad de Lilliefors para Consecuencia. Fuente: elaboración propia.")
+
+```
+
+En la tabla Alpha de Cronbach y Lambda 6 de Guttman retirando cada ítem para Actividad Sexual, podemos observar la consistencia interna para cada ítem con el número de individuos correspondiente.
+
+## Ciudado
+
+### Análisis de correlación múltiple
+
+En primera instancia se calcula la matriz de correlaciones. En este gráfico es importante encontrar correlaciones fuertes entre los ítems, al menos mayores a 0.5.
+
+```{r}
+
+which(fact_dicc$Factor == "Cuidado")[1] -> pos_fac
+which(fact_dicc$seccion == "Percepción de riesgo")[1] -> pos_sec
+
+
+diccionario_777$rotulo[which(diccionario_777$Factor == fact_dicc$Factor[pos_fac] & diccionario_777$seccion == fact_dicc$seccion[pos_sec])] -> rotulo_f1
+
+num_777  %>% "[" (rotulo_f1) %>% mutate(MT = 1:nrow(num_777)) -> base_cuid # Consecuencia
+
+
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, error=FALSE, fig.height= 4, fig.width = 4, fig.cap = "Figura: Matriz de correlaciones de Cuidado. Fuente: elaboración propia."}
+
+col <- colorRampPalette(c("#ccc000", "#ddd999", "#eeeeee", "#999ddd", "#000ccc"))
+
+base_cuid[,-which(colnames(base_cuid) == "MT" )] %>% cor %>% corrplot.mixed(lower = "number", upper = "color", family = "Times New Roman", lower.col = "#aaaaaa", number.cex = 0.6, tl.cex = 0.6)
+
+```
+El gráfico Matriz de correlación de cuidado, nos muestra los ítems y su correlación, la escala de colores nos muestra que entre más oscuro es el color azul mayor es la correlación. Para este caso solo se muestra la correlación de los dos ítems
+
+
+Se muestra también el gráfico de sedimentación, donde se establece la cantidad de varianza retenida en cada eje. **(toca decidir cuál de los dos dejar)**
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, results='markup'}
+base_cuid[,-which(colnames(base_cuid) == "MT" )] %>% PCA(graph = FALSE) -> pca
+
+factor_name <- paste(
+fact_dicc[["seccion"]][pos_sec],
+fact_dicc[["Factor"]][pos_fac]
+)
+
+pca %$% ind %$% coord %>% 
+  as.data.frame %$% 
+  Dim.1 -> fitted_factors[[factor_name]]
+
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pca %$% as.data.frame(eig) %>% mutate(Eje = 1:nrow(.), eigen_cum = cumsum(eigenvalue)) -> eig
+
+```
+
+
+
+
+```{r echo = FALSE, warning=FALSE,fig.height= 3, fig.width = 7, fig.cap = "Figura: gráfico de sedimentación de Cuidado. Fuente: elaboración propia."}
+eig %>% ggplot + 
+  geom_line(aes(x = Eje, y = eigenvalue)) +
+  geom_point(aes(x = Eje, y = eigenvalue))  + 
+  labs(y = "Autovalores", x = "Eje")  +
+  scale_x_continuous(breaks = 1:nrow(eig)) +
+  scale_y_continuous(limits = c(0, max(eig$eigenvalue + 0.1))) +
+  theme_light(base_family = "Times New Roman")
+
+```
+En el grafico de observa en el en el eje y los autovalores y en el eje x el número de ejes, esta Gráfica nos dice cuantos ejes son recomendables para explicar un alto porcentaje de varianza.
+
+```{r echo = FALSE, warning=FALSE, fig.height= 3, fig.width = 7, fig.cap = "Figura: gráfico de sedimentación de Cuidado. En azul el porcentaje de varianza explicado por cada eje, en rojo el porcentaje acumulado. Fuente: elaboración propia."}
+eig %>% setNames(letters[1:ncol(.)]) %>% ggplot + 
+  geom_line(aes(x = d, y = b), colour = "#0088dd") +
+  geom_point(aes(x = d, y = b), colour = "#0088dd")  + 
+  geom_line(aes(x = d, y = c), colour = "#dd8800") +
+  geom_point(aes(x = d, y = c), colour = "#dd8800")  + 
+  labs(y = "Varianza", x = "Eje")  +
+  scale_x_continuous(breaks = 1:nrow(eig)) +
+  scale_y_continuous(limits = c(0, max(eig$c + 0.1))) +
+  theme_light(base_family = "Times New Roman")
+
+
+```
+
+El gráfico de sedimentación de Cuidado, nos muestra el porcentaje de varianza y cuanta retiene cada eje, el porcentaje acumulado que se encuentra en color rojo.
+
+Acto seguido es posible observar el círculo de correlaciones correspondiente. En este gráfico los ítems se visualizan como flechas. Cuando estas flechas apuntan todas en la misma dirección se tiene un buen nivel de consistencia interna.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.height= 5, fig.width = 6, fig.cap = "Figura: círculo de correlaciones de Cuidado. Fuente: elaboración propia."}
+
+plot_size <- 1.2
+
+  pca %$% var %$% coord %>% as.data.frame %>% mutate(variable = rownames(.)) %>% 
+  ggplot + 
+  geom_hline(aes(yintercept = 0), size=.2) + 
+  geom_vline(aes(xintercept = 0), size=.2) +
+  geom_segment(aes(x = 0, y = 0, xend = Dim.1, yend = Dim.2), colour = "#222222", arrow = arrow(type = "closed", length = unit(x = 0.3, units = "cm"))) +
+  geom_label_repel(alpha = 1, size = 5, aes(x = Dim.1, y = Dim.2, label = variable), family = "Times New Roman") +
+  labs(x = "Primer factor", y = "Segundo factor") + 
+  xlim(-plot_size, plot_size) +
+  ylim(-plot_size, plot_size) +
+  coord_fixed()  +
+  theme_light(base_family = "Times New Roman") + 
+  annotate(
+    "path",
+    x= cos(seq(0,2*pi,length.out=100)),
+    y= sin(seq(0,2*pi,length.out=100))
+  )
+
+```
+El círculo de correlaciones de cuidado en su eje x tiene el primer factor y en su eje y el segundo factor, en este grafico las variables se encuentran simbolizadas por una flecha dentro de un círculo centrado con radio 1, debido a que han sido centradas y estandarizadas, podemos ver que la dirección de los ítems lo cual nos indica que están bien explicadas por este eje.
+
+### Análisis de consistencia interna
+
+Para evaluar la consistencia interna es posible usar varios estadísticos. Entre ellos el Alpha de Cronbach y el Lambda 6 de Guttman. que se muestran a continuación.
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+base_cuid[,-which(colnames(base_cuid) == "MT" )] %>% alpha() -> reability_cuid
+
+pca %$% ind %$% coord %>% as.data.frame %$%
+  shapiro.test(Dim.1) -> shapiro_wilks_cuid
+
+
+pca %$% ind %$% coord %>% as.data.frame %$%
+  lillie.test(Dim.1) -> lilliefors_cuid
+
+tabla_final[["Cuid"]] = c(reability_cuid$total$raw_alpha, reability_cuid$total$`G6(smc)`, shapiro_wilks_cuid$p.value, lilliefors_cuid$p.value)
+
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+data.frame(
+  x1 = min(reability_cuid[["item.stats"]][["n"]]),
+  x2 = reability_cuid$nvar,
+  x3 = reability_cuid[["total"]][["raw_alpha"]],
+  x4 = reability_cuid[["total"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("Individuos", "ítems", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman para Cuidado. Fuente: elaboración propia.")
+
+```
+En esta tabla podemos observar los valores obtenidos para las dos pruebas de consistencia, el Alpha de Cronbach es un coeficiente que nos sirve para medir la consistencia interna, el valor máximo que puede tomar este coeficiente es 1 el cual indica una fiabilidad en la escala, por otro lado, el Guttman's Lambda 6 es aquel que considera la varianza de cada elemento.
+
+
+
+Para evaluar la calidad de los ítems se calcula la consistencia interna retirando uno por uno. La siguiente tabla muestra el Análisis realizado al interior de los ítems, corroborando su pertinencia.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+data.frame(
+  x0 = rownames(reability_cuid[["alpha.drop"]]),
+  x1 = reability_cuid[["item.stats"]][["n"]],
+  x3 = reability_cuid[["alpha.drop"]][["raw_alpha"]],
+  x4 = reability_cuid[["alpha.drop"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("ítems","Individuos", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman retirando cada ítem para Cuidado. Fuente: elaboración propia.")
+
+```
+
+
+
+En la tabla Alpha de Cronbach y Lambda 6 de Guttman retirando cada ítem para Cuidado, podemos observar la consistencia interna para cada ítem con el número de individuos correspondiente.
+
+
+### Normalidad del primer factor
+
+Para la Construcción posterior de modelos psicométricos, es relevante comprobar supuestos estadísticos usuales. Para ello se aplican dos pruebas de normalidad conocidas, Shapiro-Wilks y Lilliefors siendo la primera una de las más potentes reportadas.
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(shapiro_wilks_cuid, caption = "Tabla: Prueba de normalidad de Shapiro-Wilks para Cuidado. Fuente: elaboración propia.")
+
+```
+La prueba de Shapiro- Wilks nos indica si los datos de la muestra siguen una distribución normal, si el alpha es mayor al P value rechazo la hipótesis nula lo que me indica que no sigue una distribución normal.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(lilliefors_cuid, caption = "Tabla: Prueba de normalidad de Lilliefors para Cuidado. Fuente: elaboración propia.")
+
+```
+El test de kolmogorov-smirnov nos muestra la bondad de ajuste, al realizarse un ajuste se obtuvo el test de lillefors el cual nos sirve para probar la normalidad de los datos.
+
+```{r res_as, cache = TRUE}
+tabla_final -> tabla_final_1
+
+```
+
+# Práctica
+
+En esta sección se presentan los resultados asociados al formulario de Percepción de riesgo. 
+
+```{r}
+tryCatch(
+  load_cache("res_pr", "tabla_final_2"),
+  error = function(e) data.frame(a = 1)
+  ) %>% kable(digits = 2, caption = "Tabla: Pruebas para cada factor de práctica. Fuente: elaboración propia.")
+
+```
+
+
+## Actividad Sexual
+
+### Análisis de correlación múltiple
+
+En primera instancia se calcula la matriz de correlaciones. En este gráfico es importante encontrar correlaciones fuertes entre los ítems, al menos mayores a 0.5.
+
+```{r}
+
+tabla_final <- data.frame(Pruebas = c("Alpha de Cronbach", "Guttman's Lambda 6", "Shapiro Wilks", "Lilliefors"))
+
+
+which(fact_dicc$Factor == "Actividad Sexual")[1] -> pos_fac
+which(fact_dicc$seccion == "Práctica")[1] -> pos_sec
+
+
+diccionario_777$rotulo[which(diccionario_777$Factor == fact_dicc$Factor[pos_fac] & diccionario_777$seccion == fact_dicc$seccion[pos_sec])] -> rotulo_f1
+
+num_777  %>% "[" (rotulo_f1) %>% mutate(MT = 1:nrow(num_777)) -> base_activ #Actividad Sexual
+
+
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, error=FALSE, fig.height= 4, fig.width = 4, fig.cap = "Figura: Matriz de correlaciones de Actividad Sexual. Fuente: elaboración propia."}
+
+col <- colorRampPalette(c("#ccc000", "#ddd999", "#eeeeee", "#999ddd", "#000ccc"))
+
+base_activ[,-which(colnames(base_activ) == "MT" )] %>% cor %>% corrplot.mixed(lower = "number", upper = "color", family = "Times New Roman", lower.col = "#aaaaaa", number.cex = 0.6, tl.cex = 0.6)
+  
+  
+
+# + theme_light(base_family = "Times New Roman") -> a # esto no es ggplot, jajajajajajaja
+
+```
+El grafico Matriz de correlación de elección, nos muestra los ítems y su correlación, la escala de colores nos muestra que entre más oscuro es el color azul mayor es la correlación. La correlación más alta es de 0.4 de los ítems RSSC y HPCI.
+
+Se muestra también el gráfico de sedimentación, donde se establece la cantidad de varianza retenida en cada eje. **(toca decidir cuál de los dos dejar)**
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, results='markup'}
+base_activ[,-which(colnames(base_activ) == "MT" )] %>% PCA(graph = FALSE) -> pca
+
+factor_name <- paste(
+fact_dicc[["seccion"]][pos_sec],
+fact_dicc[["Factor"]][pos_fac]
+)
+
+pca %$% ind %$% coord %>% 
+  as.data.frame %$% 
+  Dim.1 -> fitted_factors[[factor_name]]
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pca %$% as.data.frame(eig) %>% mutate(Eje = 1:nrow(.), eigen_cum = cumsum(eigenvalue)) -> eig
+
+```
+
+
+```{r echo = FALSE, warning=FALSE,fig.height= 3, fig.width = 7, fig.cap = "Figura: gráfico de sedimentación de Actividad Sexual. Fuente: elaboración propia."}
+eig %>% ggplot + 
+  geom_line(aes(x = Eje, y = eigenvalue)) +
+  geom_point(aes(x = Eje, y = eigenvalue))  + 
+  labs(y = "Autovalores", x = "Eje")  +
+  scale_x_continuous(breaks = 1:nrow(eig)) +
+  scale_y_continuous(limits = c(0, max(eig$eigenvalue + 0.1))) +
+  theme_light(base_family = "Times New Roman")
+
+```
+En el gráfico anterior podemos la comparación de los autovalores con el número de ejes observar La varianza explicada por cada eje.
+
+```{r echo = FALSE, warning=FALSE, fig.height= 3, fig.width = 7, fig.cap = "Figura: gráfico de sedimentación de Actividad Sexual. En azul el porcentaje de varianza explicado por cada eje, en rojo el porcentaje acumulado. Fuente: elaboración propia."}
+eig %>% setNames(letters[1:ncol(.)]) %>% ggplot + 
+  geom_line(aes(x = d, y = b), colour = "#0088dd") +
+  geom_point(aes(x = d, y = b), colour = "#0088dd")  + 
+  geom_line(aes(x = d, y = c), colour = "#dd8800") +
+  geom_point(aes(x = d, y = c), colour = "#dd8800")  + 
+  labs(y = "Varianza", x = "Eje")  +
+  scale_x_continuous(breaks = 1:nrow(eig)) +
+  scale_y_continuous(limits = c(0, max(eig$c + 0.1))) +
+  theme_light(base_family = "Times New Roman")
+
+
+```
+
+
+En rojo tenemos el porcentaje acumulado de varianza explicada dependiendo el número de ejes, para retener el 50% de la varianza se necesitan 3 ejes.
+
+Acto seguido es posible observar el círculo de correlaciones correspondiente. En este gráfico los ítems se visualizan como flechas. Cuando estas flechas apuntan todas en la misma dirección se tiene un buen nivel de consistencia interna.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.height= 5, fig.width = 6, fig.cap = "Figura: círculo de correlaciones de Actividad Sexual. Fuente: elaboración propia."}
+
+plot_size <- 1.2
+
+  pca %$% var %$% coord %>% as.data.frame %>% mutate(variable = rownames(.)) %>% 
+  ggplot + 
+  geom_hline(aes(yintercept = 0), size=.2) + 
+  geom_vline(aes(xintercept = 0), size=.2) +
+  geom_segment(aes(x = 0, y = 0, xend = Dim.1, yend = Dim.2), colour = "#222222", arrow = arrow(type = "closed", length = unit(x = 0.3, units = "cm"))) +
+  geom_label_repel(alpha = 1, size = 5, aes(x = Dim.1, y = Dim.2, label = variable), family = "Times New Roman") +
+  labs(x = "Primer factor", y = "Segundo factor") + 
+  xlim(-plot_size, plot_size) +
+  ylim(-plot_size, plot_size) +
+  coord_fixed()  +
+  theme_light(base_family = "Times New Roman") + 
+  annotate(
+    "path",
+    x= cos(seq(0,2*pi,length.out=100)),
+    y= sin(seq(0,2*pi,length.out=100))
+  )
+
+```
+
+El círculo de correlaciones de Elección en su eje x tiene el primer factor y en su eje y el segundo factor, en este grafico los ítems se encuentran simbolizadas por una flecha con una longitud, dentro de un círculo centrado con radio 1, podemos ver que todos los ítems van en la misma dirección.
+
+### Análisis de consistencia interna
+
+Para evaluar la consistencia interna es posible usar varios estadísticos. Entre ellos el Alpha de Cronbach y el Lambda 6 de Guttman. que se muestran a continuación.
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+base_activ[,-which(colnames(base_activ) == "MT" )] %>% alpha() -> reability
+
+pca %$% ind %$% coord %>% as.data.frame %$%
+  shapiro.test(Dim.1) -> shapiro_wilks
+
+
+pca %$% ind %$% coord %>% as.data.frame %$%
+  lillie.test(Dim.1) -> lilliefors
+
+tabla_final[["Act_Sex"]] = c(reability$total$raw_alpha, reability$total$`G6(smc)`, shapiro_wilks$p.value, lilliefors$p.value)
+
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+data.frame(
+  x1 = min(reability[["item.stats"]][["n"]]),
+  x2 = reability$nvar,
+  x3 = reability[["total"]][["raw_alpha"]],
+  x4 = reability[["total"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("Individuos", "ítems", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman para Actividad Sexual. Fuente: elaboración propia.")
+
+```
+
+Se observan las pruebas de consistencia interna para los ocho ítems que cuentan con 809 individuos, las medidas estadísticas que calculan por medio de la correlación.
+
+
+Para evaluar la calidad de los ítems se calcula la consistencia interna retirando uno por uno. La siguiente tabla muestra el Análisis realizado al interior de los ítems, corroborando su pertinencia.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+data.frame(
+  x0 = rownames(reability[["alpha.drop"]]),
+  x1 = reability[["item.stats"]][["n"]],
+  x3 = reability[["alpha.drop"]][["raw_alpha"]],
+  x4 = reability[["alpha.drop"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("ítems","Individuos", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman retirando cada ítem para Actividad Sexual. Fuente: elaboración propia.")
+
+```
+Se observan las medidas de consistencia para cada ítem en este caso son 8 ,  se calcula con los 809 individuos y se evidencia el valor de las dos medidas estadísticas.
+
+### Normalidad del primer factor
+
+Para la Construcción posterior de modelos psicométricos, es relevante comprobar supuestos estadísticos usuales. Para ello se aplican dos pruebas de normalidad conocidas, Shapiro-Wilks y Lilliefors siendo la primera una de las más potentes reportadas.
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(shapiro_wilks, caption = "Tabla: Prueba de normalidad de Shapiro-Wilks para Actividad Sexual. Fuente: elaboración propia.")
+
+```
+
+ La prueba de Shapiro- Wilks  nos indica si los datos de la muestra siguen una distribución normal, si el apha es mayor al P value rechazo la hipótesis nula. 
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(lilliefors, caption = "Tabla: Prueba de normalidad de Lilliefors para Actividad Sexual. Fuente: elaboración propia.")
+
+```
+El test de kolmogorov-smirnov nos muestra la bondad de ajuste, al realizarse un ajuste se obtuvo el test de lillefors el cual nos sirve para probar la normalidad de los datos, se busca no rechazar la hipótesis nula para esto el Alpha debe ser menor que el P value.
+## Elección
+
+### Análisis de correlación múltiple
+
+En primera instancia se calcula la matriz de correlaciones. En este gráfico es importante encontrar correlaciones fuertes entre los ítems, al menos mayores a 0.5.
+
+```{r}
+
+which(fact_dicc$Factor == "Elección")[1] -> pos_fac
+which(fact_dicc$seccion == "Práctica")[1] -> pos_sec
+
+diccionario_777$rotulo[which(diccionario_777$Factor == fact_dicc$Factor[pos_fac] & diccionario_777$seccion == fact_dicc$seccion[pos_sec])] -> rotulo_f1
+
+num_777  %>% "[" (rotulo_f1) %>% mutate(MT = 1:nrow(num_777)) -> base_elec #Elección
+
+
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, error=FALSE, fig.height= 4, fig.width = 4, fig.cap = "Figura: Matriz de correlaciones de Elección. Fuente: elaboración propia."}
+
+col <- colorRampPalette(c("#ccc000", "#ddd999", "#eeeeee", "#999ddd", "#000ccc"))
+
+base_elec[,-which(colnames(base_elec) == "MT" )] %>% cor %>% corrplot.mixed(lower = "number", upper = "color", family = "Times New Roman", lower.col = "#aaaaaa", number.cex = 0.6, tl.cex = 0.6)
+
+```
+
+En la Gráfica de la matriz de correlaciones de Elección podemos observar la correlación de los ítems HSIS y RSRC, no se ve una intensidad alta en el color azul.
+
+
+
+Se muestra también el gráfico de sedimentación, donde se establece la cantidad de varianza retenida en cada eje. **(toca decidir cuál de los dos dejar)**
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, results='markup'}
+base_elec[,-which(colnames(base_elec) == "MT" )] %>% PCA(graph = FALSE) -> pca
+
+factor_name <- paste(
+fact_dicc[["seccion"]][pos_sec],
+fact_dicc[["Factor"]][pos_fac]
+)
+
+pca %$% ind %$% coord %>% 
+  as.data.frame %$% 
+  Dim.1 -> fitted_factors[[factor_name]]
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pca %$% as.data.frame(eig) %>% mutate(Eje = 1:nrow(.), eigen_cum = cumsum(eigenvalue)) -> eig
+
+```
+
+
+```{r echo = FALSE, warning=FALSE,fig.height= 3, fig.width = 7, fig.cap = "Figura: gráfico de sedimentación de Elección. Fuente: elaboración propia."}
+  
+eig %>% ggplot + 
+  geom_line(aes(x = Eje, y = eigenvalue)) +
+  geom_point(aes(x = Eje, y = eigenvalue))  + 
+  labs(y = "Autovalores", x = "Eje")  +
+  scale_x_continuous(breaks = 1:nrow(eig)) +
+  scale_y_continuous(limits = c(0, max(eig$eigenvalue + 0.1))) +
+  theme_light(base_family = "Times New Roman")
+
+```
+
+En el gráfico de sedimentación de Elección podemos observar los autovalores de los dos items y la varianza que explica cada eje dependiendo de su autovalor.
+
+
+```{r echo = FALSE, warning=FALSE, fig.height= 3, fig.width = 7, fig.cap = "Figura: gráfico de sedimentación de Elección. En azul el porcentaje de varianza explicado por cada eje, en rojo el porcentaje acumulado. Fuente: elaboración propia."}
+eig %>% setNames(letters[1:ncol(.)]) %>% ggplot + 
+  geom_line(aes(x = d, y = b), colour = "#0088dd") +
+  geom_point(aes(x = d, y = b), colour = "#0088dd")  + 
+  geom_line(aes(x = d, y = c), colour = "#dd8800") +
+  geom_point(aes(x = d, y = c), colour = "#dd8800")  + 
+  labs(y = "Varianza", x = "Eje")  +
+  scale_x_continuous(breaks = 1:nrow(eig)) +
+  scale_y_continuous(limits = c(0, max(eig$c + 0.1))) +
+  theme_light(base_family = "Times New Roman")
+
+
+```
+
+
+En el gráfico de sedimentación de Elección se puede observar la varianza retenida por cada eje y el acumulado de varianza retenida, el primer eje recoge una varianza superior al 50%
+
+
+
+Acto seguido es posible observar el círculo de correlaciones correspondiente. En este gráfico los ítems se visualizan como flechas. Cuando estas flechas apuntan todas en la misma dirección se tiene un buen nivel de consistencia interna.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.height= 5, fig.width = 6, fig.cap = "Figura: círculo de correlaciones de Elección. Fuente: elaboración propia."}
+
+plot_size <- 1.2
+
+  pca %$% var %$% coord %>% as.data.frame %>% mutate(variable = rownames(.)) %>% 
+  ggplot + 
+  geom_hline(aes(yintercept = 0), size=.2) + 
+  geom_vline(aes(xintercept = 0), size=.2) +
+  geom_segment(aes(x = 0, y = 0, xend = Dim.1, yend = Dim.2), colour = "#222222", arrow = arrow(type = "closed", length = unit(x = 0.3, units = "cm"))) +
+  geom_label_repel(alpha = 1, size = 5, aes(x = Dim.1, y = Dim.2, label = variable), family = "Times New Roman") +
+  labs(x = "Primer factor", y = "Segundo factor") + 
+  xlim(-plot_size, plot_size) +
+  ylim(-plot_size, plot_size) +
+  coord_fixed()  +
+  theme_light(base_family = "Times New Roman") + 
+  annotate(
+    "path",
+    x= cos(seq(0,2*pi,length.out=100)),
+    y= sin(seq(0,2*pi,length.out=100))
+  )
+
+```
+En el grafico de correlaciones de consecuencia, podemos ver los 2 factores que se encuentran simbolizados con una flecha que representa una longitud, los tres ítems tienen la misma dirección.
+
+### Análisis de consistencia interna
+
+Para evaluar la consistencia interna es posible usar varios estadísticos. Entre ellos el Alpha de Cronbach y el Lambda 6 de Guttman. que se muestran a continuación.
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, error=FALSE}
+
+base_elec[,-which(colnames(base_elec) == "MT" )] %>% alpha() -> reability_ele
+
+pca %$% ind %$% coord %>% as.data.frame %$%
+  shapiro.test(Dim.1) -> shapiro_wilks_ele
+
+
+pca %$% ind %$% coord %>% as.data.frame %$%
+  lillie.test(Dim.1) -> lilliefors_ele
+
+tabla_final[["Elec"]] = c(reability_ele$total$raw_alpha, reability_ele$total$`G6(smc)`, shapiro_wilks_ele$p.value, lilliefors_ele$p.value)
+
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+data.frame(
+  x1 = min(reability_ele[["item.stats"]][["n"]]),
+  x2 = reability_ele$nvar,
+  x3 = reability_ele[["total"]][["raw_alpha"]],
+  x4 = reability_ele[["total"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("Individuos", "ítems", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman para Elección. Fuente: elaboración propia.")
+
+```
+ Se observan las pruebas de consistencia interna para los dos ítems que cuentan con 809 individuos, las medidas estadísticas que calculan por medio de la correlación.
+ 
+ 
+Para evaluar la calidad de los ítems se calcula la consistencia interna retirando uno por uno. La siguiente tabla muestra el Análisis realizado al interior de los ítems, corroborando su pertinencia.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+data.frame(
+  x0 = rownames(reability_ele[["alpha.drop"]]),
+  x1 = reability_ele[["item.stats"]][["n"]],
+  x3 = reability_ele[["alpha.drop"]][["raw_alpha"]],
+  x4 = reability_ele[["alpha.drop"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("ítems","Individuos", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman retirando cada ítem para Elección. Fuente: elaboración propia.")
+
+```
+
+
+### Normalidad del primer factor
+
+Para la Construcción posterior de modelos psicométricos, es relevante comprobar supuestos estadísticos usuales. Para ello se aplican dos pruebas de normalidad conocidas, Shapiro-Wilks y Lilliefors siendo la primera una de las más potentes reportadas.
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(shapiro_wilks_ele, caption = "Tabla: Prueba de normalidad de Shapiro-Wilks para Elección. Fuente: elaboración propia.")
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(lilliefors_ele, caption = "Tabla: Prueba de normalidad de Lilliefors para Elección. Fuente: elaboración propia.")
+
+```
+El test de kolmogorov-smirnov nos muestra la bondad de ajuste, al realizarse un ajuste se obtuvo el test de lillefors el cual nos sirve para probar la normalidad de los datos.
+
+La prueba de Shapiro- Wilks nos indica si los datos de la muestra siguen una distribución normal, si el alpha es mayor al P value rechazo la hipótesis nula lo que me indica que no sigue una distribución normal.
+
+## Ciudado
+
+### Análisis de correlación múltiple
+
+En primera instancia se calcula la matriz de correlaciones. En este gráfico es importante encontrar correlaciones fuertes entre los ítems, al menos mayores a 0.5.
+
+
+```{r}
+
+which(fact_dicc$Factor == "Cuidado")[1] -> pos_fac
+which(fact_dicc$seccion == "Práctica")[1] -> pos_sec
+
+
+diccionario_777$rotulo[which(diccionario_777$Factor == fact_dicc$Factor[pos_fac] & diccionario_777$seccion == fact_dicc$seccion[pos_sec])] -> rotulo_f1
+
+num_777  %>% "[" (rotulo_f1) %>% mutate(MT = 1:nrow(num_777)) -> base_cuid # Consecuencia
+
+
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, error=FALSE, fig.height= 4, fig.width = 4, fig.cap = "Figura: Matriz de correlaciones de Cuidado. Fuente: elaboración propia."}
+
+col <- colorRampPalette(c("#ccc000", "#ddd999", "#eeeeee", "#999ddd", "#000ccc"))
+
+base_cuid[,-which(colnames(base_cuid) == "MT" )] %>% cor %>% corrplot.mixed(lower = "number", upper = "color", family = "Times New Roman", lower.col = "#aaaaaa", number.cex = 0.6, tl.cex = 0.6)
+
+```
+El gráfico Matriz de correlación de Cuidado, nos muestra los ítems y su correlación, la escala de colores nos muestra que entre más oscuro es el color azul mayor es la correlación y la correlación correspondiente.
+
+
+Se muestra también el gráfico de sedimentación, donde se establece la cantidad de varianza retenida en cada eje. **(toca decidir cuál de los dos dejar)**
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, results='markup'}
+base_cuid[,-which(colnames(base_cuid) == "MT" )] %>% PCA(graph = FALSE) -> pca
+
+factor_name <- paste(
+fact_dicc[["seccion"]][pos_sec],
+fact_dicc[["Factor"]][pos_fac]
+)
+
+pca %$% ind %$% coord %>% 
+  as.data.frame %$% 
+  Dim.1 -> fitted_factors[[factor_name]]
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pca %$% as.data.frame(eig) %>% mutate(Eje = 1:nrow(.), eigen_cum = cumsum(eigenvalue)) -> eig
+
+```
+
+
+```{r echo = FALSE, warning=FALSE,fig.height= 3, fig.width = 7, fig.cap = "Figura: gráfico de sedimentación de Cuidado. Fuente: elaboración propia."}
+eig %>% ggplot + 
+  geom_line(aes(x = Eje, y = eigenvalue)) +
+  geom_point(aes(x = Eje, y = eigenvalue))  + 
+  labs(y = "Autovalores", x = "Eje")  +
+  scale_x_continuous(breaks = 1:nrow(eig)) +
+  scale_y_continuous(limits = c(0, max(eig$eigenvalue + 0.1))) +
+  theme_light(base_family = "Times New Roman")
+
+```
+En el gráfico de observa en el en el eje y los autovalores y en el eje x el número de ejes, esta gráfica nos dice cuantos ejes son recomendables para explicar la varianza.
+
+```{r echo = FALSE, warning=FALSE, fig.height= 3, fig.width = 7, fig.cap = "Figura: gráfico de sedimentación de Cuidado. En azul el porcentaje de varianza explicado por cada eje, en rojo el porcentaje acumulado. Fuente: elaboración propia."}
+eig %>% setNames(letters[1:ncol(.)]) %>% ggplot + 
+  geom_line(aes(x = d, y = b), colour = "#0088dd") +
+  geom_point(aes(x = d, y = b), colour = "#0088dd")  + 
+  geom_line(aes(x = d, y = c), colour = "#dd8800") +
+  geom_point(aes(x = d, y = c), colour = "#dd8800")  + 
+  labs(y = "Varianza", x = "Eje")  +
+  scale_x_continuous(breaks = 1:nrow(eig)) +
+  scale_y_continuous(limits = c(0, max(eig$c + 0.1))) +
+  theme_light(base_family = "Times New Roman")
+
+
+```
+
+El gráfico de sedimentación de Cuidado, nos muestra el porcentaje de varianza y cuanta retiene cada eje, el porcentaje acumulado que se encuentra en color rojo donde se observa que este el primer eje retiene el 50% de la varianza.
+
+
+Acto seguido es posible observar el círculo de correlaciones correspondiente. En este gráfico los ítems se visualizan como flechas. Cuando estas flechas apuntan todas en la misma dirección se tiene un buen nivel de consistencia interna.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.height= 5, fig.width = 6, fig.cap = "Figura: círculo de correlaciones de Cuidado. Fuente: elaboración propia."}
+
+plot_size <- 1.2
+
+  pca %$% var %$% coord %>% as.data.frame %>% mutate(variable = rownames(.)) %>% 
+  ggplot + 
+  geom_hline(aes(yintercept = 0), size=.2) + 
+  geom_vline(aes(xintercept = 0), size=.2) +
+  geom_segment(aes(x = 0, y = 0, xend = Dim.1, yend = Dim.2), colour = "#222222", arrow = arrow(type = "closed", length = unit(x = 0.3, units = "cm"))) +
+  geom_label_repel(alpha = 1, size = 5, aes(x = Dim.1, y = Dim.2, label = variable), family = "Times New Roman") +
+  labs(x = "Primer factor", y = "Segundo factor") + 
+  xlim(-plot_size, plot_size) +
+  ylim(-plot_size, plot_size) +
+  coord_fixed()  +
+  theme_light(base_family = "Times New Roman") + 
+  annotate(
+    "path",
+    x= cos(seq(0,2*pi,length.out=100)),
+    y= sin(seq(0,2*pi,length.out=100))
+  )
+
+```
+
+El círculo de correlaciones de cuidado en su eje x tiene el primer factor y en su eje y el segundo factor, en este grafico las variables se encuentran simbolizadas por una flecha dentro de un círculo centrado con radio 1, debido a que han sido centradas y estandarizadas.
+
+### Análisis de consistencia interna
+
+Para evaluar la consistencia interna es posible usar varios estadísticos. Entre ellos el Alpha de Cronbach y el Lambda 6 de Guttman. que se muestran a continuación.
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, error=FALSE}
+
+base_cuid[,-which(colnames(base_cuid) == "MT" )] %>% alpha() -> reability_cuid
+
+pca %$% ind %$% coord %>% as.data.frame %$%
+  shapiro.test(Dim.1) -> shapiro_wilks_cuid
+
+
+pca %$% ind %$% coord %>% as.data.frame %$%
+  lillie.test(Dim.1) -> lilliefors_cuid
+
+tabla_final[["Cons"]] = c(reability_cuid$total$raw_alpha, reability_cuid$total$`G6(smc)`, shapiro_wilks_cuid$p.value, lilliefors_cuid$p.value)
+
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+data.frame(
+  x1 = min(reability_cuid[["item.stats"]][["n"]]),
+  x2 = reability_cuid$nvar,
+  x3 = reability_cuid[["total"]][["raw_alpha"]],
+  x4 = reability_cuid[["total"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("Individuos", "ítems", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman para Cuidado. Fuente: elaboración propia.")
+
+```
+En la tabla podemos observar dos estadísticos de consistencia interna, el Alpha de Cronbach y Guttman´s lambda 6 con los 809 individuos y los 2 ítems.
+
+Para evaluar la calidad de los ítems se calcula la consistencia interna retirando uno por uno. La siguiente tabla muestra el Análisis realizado al interior de los ítems, corroborando su pertinencia.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+data.frame(
+  x0 = rownames(reability_cuid[["alpha.drop"]]),
+  x1 = reability_cuid[["item.stats"]][["n"]],
+  x3 = reability_cuid[["alpha.drop"]][["raw_alpha"]],
+  x4 = reability_cuid[["alpha.drop"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("ítems","Individuos", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman retirando cada ítem para Cuidado. Fuente: elaboración propia.")
+
+```
+Podemos ver el Alpha de Cronbach y lambda 6 de Guttman por cada ítem, el cual nos muestra la consistencia de cada uno de los dos ítems tomando los 809 individuos.
+
+### Normalidad del primer factor
+
+Para la Construcción posterior de modelos psicométricos, es relevante comprobar supuestos estadísticos usuales. Para ello se aplican dos pruebas de normalidad conocidas, Shapiro-Wilks y Lilliefors siendo la primera una de las más potentes reportadas.
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(shapiro_wilks_cuid, caption = "Tabla: Prueba de normalidad de Shapiro-Wilks para Cuidado. Fuente: elaboración propia.")
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(lilliefors_cuid, caption = "Tabla: Prueba de normalidad de Lilliefors para Cuidado. Fuente: elaboración propia.")
+
+```
+
+La prueba de Shapiro- Wilks  nos indica si los datos de la muestra siguen una distribución normal, si el apha es mayor al P value rechazo la hipótesis nula. 
+
+
+El test de kolmogorov-smirnov nos muestra la bondad de ajuste, al realizarse un ajuste se obtuvo el test de lillefors el cual nos sirve para probar la normalidad de los datos, se busca no rechazar la hipótesis nula.
+
+
+```{r res_pr, cache = TRUE}
+tabla_final  -> tabla_final_2
+
+```
+
+
+# satisfacción sexual
+
+En esta sección se presentan los resultados asociados al formulario de Percepción de riesgo. 
+
+```{r}
+tryCatch(
+  load_cache("res_ss", "tabla_final_3"),
+  error = function(e) data.frame(a = 1)
+  ) %>% kable(digits = 2, caption = "Tabla: Pruebas para cada factor de Reacción emocional. Fuente: elaboración propia.")
+
+```
+
+
+## Comunicacíon
+
+### Análisis de correlación múltiple
+
+En primera instancia se calcula la matriz de correlaciones. En este gráfico es importante encontrar correlaciones fuertes entre los ítems, al menos mayores a 0.5.
+
+
+```{r}
+
+tabla_final <- data.frame(Pruebas = c("Alpha de Cronbach", "Guttman's Lambda 6", "Shapiro Wilks", "Lilliefors"))
+
+which(fact_dicc$Factor == "Comunicación")[1] -> pos_fac
+which(fact_dicc$seccion == "Satisfacción sexual")[1] -> pos_sec
+
+diccionario_777$rotulo[which(diccionario_777$Factor == fact_dicc$Factor[pos_fac] & diccionario_777$seccion == fact_dicc$seccion[pos_sec])] -> rotulo_f1
+
+num_777  %>% "[" (rotulo_f1) %>% mutate(MT = 1:nrow(num_777)) -> base_comu #comunicacíon
+
+
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, error=FALSE, fig.height= 4, fig.width = 4, fig.cap = "Figura: Matriz de correlaciones de Comunicacíon. Fuente: elaboración propia."}
+
+col <- colorRampPalette(c("#ccc000", "#ddd999", "#eeeeee", "#999ddd", "#000ccc"))
+
+base_comu[,-which(colnames(base_comu) == "MT" )] %>% cor %>% corrplot.mixed(lower = "number", upper = "color", family = "Times New Roman", lower.col = "#aaaaaa", number.cex = 0.6, tl.cex = 0.6)
+  
+  
+
+# + theme_light(base_family = "Times New Roman") -> a # esto no es ggplot, jajajajajajaja
+
+```
+El gráfico Matriz de correlación de Comunicación, nos muestra los ítems y su correlación, la escala de colores nos muestra que entre más oscuro es el color azul mayor es la correlación y su respectiva correlación los ítems.
+
+Se muestra también el gráfico de sedimentación, donde se establece la cantidad de varianza retenida en cada eje. **(toca decidir cuál de los dos dejar)**
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, results='markup'}
+base_comu[,-which(colnames(base_comu) == "MT" )] %>% PCA(graph = FALSE) -> pca
+
+factor_name <- paste(
+fact_dicc[["seccion"]][pos_sec],
+fact_dicc[["Factor"]][pos_fac]
+)
+
+pca %$% ind %$% coord %>% 
+  as.data.frame %$% 
+  Dim.1 -> fitted_factors[[factor_name]]
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pca %$% as.data.frame(eig) %>% mutate(Eje = 1:nrow(.), eigen_cum = cumsum(eigenvalue)) -> eig
+
+```
+
+
+```{r echo = FALSE, warning=FALSE,fig.height= 3, fig.width = 7, fig.cap = "Figura: gráfico de sedimentación de Comunicacíon. Fuente: elaboración propia."}
+eig %>% ggplot + 
+  geom_line(aes(x = Eje, y = eigenvalue)) +
+  geom_point(aes(x = Eje, y = eigenvalue))  + 
+  labs(y = "Autovalores", x = "Eje")  +
+  scale_x_continuous(breaks = 1:nrow(eig)) +
+  scale_y_continuous(limits = c(0, max(eig$eigenvalue + 0.1))) +
+  theme_light(base_family = "Times New Roman")
+
+```
+En el grafico de observa en el en el eje y los autovalores y en el eje x el número de ejes, esta Gráfica nos dice cuantos ejes son recomendables para explicar un alto porcentaje de varianza, el primer eje es el que más porcentaje de varianza retiene, después del segundo autovalor podemos observar que se genera una línea recta. 
+
+```{r echo = FALSE, warning=FALSE, fig.height= 3, fig.width = 7, fig.cap = "Figura: gráfico de sedimentación de comunicacíon. En azul el porcentaje de varianza explicado por cada eje, en rojo el porcentaje acumulado. Fuente: elaboración propia."}
+eig %>% setNames(letters[1:ncol(.)]) %>% ggplot + 
+  geom_line(aes(x = d, y = b), colour = "#0088dd") +
+  geom_point(aes(x = d, y = b), colour = "#0088dd")  + 
+  geom_line(aes(x = d, y = c), colour = "#dd8800") +
+  geom_point(aes(x = d, y = c), colour = "#dd8800")  + 
+  labs(y = "Varianza", x = "Eje")  +
+  scale_x_continuous(breaks = 1:nrow(eig)) +
+  scale_y_continuous(limits = c(0, max(eig$c + 0.1))) +
+  theme_light(base_family = "Times New Roman")
+
+
+```
+
+El grafico de sedimentación de actividad sexual, nos muestra el porcentaje de varianza y cuanta retiene cada eje, el porcentaje acumulado que se encuentra en color rojo nos muestra que con 4 ejes ya se tiene más del 50% de la varianza.
+
+Acto seguido es posible observar el círculo de correlaciones correspondiente. En este gráfico los ítems se visualizan como flechas. Cuando estas flechas apuntan todas en la misma dirección se tiene un buen nivel de consistencia interna.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.height= 5, fig.width = 6, fig.cap = "Figura: círculo de correlaciones de comunicacíon. Fuente: elaboración propia."}
+
+plot_size <- 1.2
+
+  pca %$% var %$% coord %>% as.data.frame %>% mutate(variable = rownames(.)) %>% 
+  ggplot + 
+  geom_hline(aes(yintercept = 0), size=.2) + 
+  geom_vline(aes(xintercept = 0), size=.2) +
+  geom_segment(aes(x = 0, y = 0, xend = Dim.1, yend = Dim.2), colour = "#222222", arrow = arrow(type = "closed", length = unit(x = 0.3, units = "cm"))) +
+  geom_label_repel(alpha = 1, size = 5, aes(x = Dim.1, y = Dim.2, label = variable), family = "Times New Roman") +
+  labs(x = "Primer factor", y = "Segundo factor") + 
+  xlim(-plot_size, plot_size) +
+  ylim(-plot_size, plot_size) +
+  coord_fixed()  +
+  theme_light(base_family = "Times New Roman") + 
+  annotate(
+    "path",
+    x= cos(seq(0,2*pi,length.out=100)),
+    y= sin(seq(0,2*pi,length.out=100))
+  )
+
+```
+El círculo de correlaciones de actividad sexual en su eje x tiene el primer factor y en su eje y el segundo factor, en este grafico las variables se encuentran simbolizadas por una flecha dentro de un círculo centrado con radio 1, debido a que han sido centradas y estandarizadas, podemos ver que la dirección de los ítems lo cual nos indica que están bien explicadas por este eje.
+
+### Análisis de consistencia interna
+
+Para evaluar la consistencia interna es posible usar varios estadísticos. Entre ellos el Alpha de Cronbach y el Lambda 6 de Guttman. que se muestran a continuación.
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+
+base_comu[,-which(colnames(base_comu) == "MT" )] %>% alpha() -> reability_comu
+
+pca %$% ind %$% coord %>% as.data.frame %$%
+  shapiro.test(Dim.1) -> shapiro_wilks_comu
+
+
+pca %$% ind %$% coord %>% as.data.frame %$%
+  lillie.test(Dim.1) -> lilliefors_comu
+
+tabla_final[["Comu"]] = c(reability_comu$total$raw_alpha, reability_comu$total$`G6(smc)`, shapiro_wilks_comu$p.value, lilliefors_comu$p.value)
+
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+data.frame(
+  x1 = min(reability_comu[["item.stats"]][["n"]]),
+  x2 = reability_comu$nvar,
+  x3 = reability_comu[["total"]][["raw_alpha"]],
+  x4 = reability_comu[["total"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("Individuos", "ítems", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman para comunicacíon. Fuente: elaboración propia.")
+
+```
+En esta tabla podemos observar los valores obtenidos para las dos pruebas de consistencia, el Alpha de Cronbach es un coeficiente que nos sirve para medir la consistencia interna, el valor máximo que puede tomar este coeficiente es 1 el cual indica una fiabilidad en la escala.
+
+Para evaluar la calidad de los ítems se calcula la consistencia interna retirando uno por uno. La siguiente tabla muestra el Análisis realizado al interior de los ítems, corroborando su pertinencia.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+data.frame(
+  x0 = rownames(reability_comu[["alpha.drop"]]),
+  x1 = reability_comu[["item.stats"]][["n"]],
+  x3 = reability_comu[["alpha.drop"]][["raw_alpha"]],
+  x4 = reability_comu[["alpha.drop"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("ítems","Individuos", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman retirando cada ítem para comunicacíon. Fuente: elaboración propia.")
+
+```
+En la tabla se evidencia por cada ítem el número de individuos y las medidas de consistencias.
+
+### Normalidad del primer factor
+
+Para la Construcción posterior de modelos psicométricos, es relevante comprobar supuestos estadísticos usuales. Para ello se aplican dos pruebas de normalidad conocidas, Shapiro-Wilks y Lilliefors siendo la primera una de las más potentes reportadas.
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(shapiro_wilks_comu, caption = "Tabla: Prueba de normalidad de Shapiro-Wilks para comunicacíon. Fuente: elaboración propia.")
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(lilliefors_comu, caption = "Tabla: Prueba de normalidad de Lilliefors para comunicacíon. Fuente: elaboración propia.")
+
+```
+Las pruebas de Shapiro- Wilks y Lilliefors nos indica si los datos de la muestra siguen una distribución normal, si el apha es mayor al P value rechazo la hipótesis nula.
+
+## Reacción emocional
+
+### Análisis de correlación múltiple
+
+En primera instancia se calcula la matriz de correlaciones. En este gráfico es importante encontrar correlaciones fuertes entre los ítems, al menos mayores a 0.5.
+
+
+```{r}
+which(fact_dicc$Factor == "Reacción emocional")[1] -> pos_fac
+which(fact_dicc$seccion == "Satisfacción sexual")[1] -> pos_sec
+
+diccionario_777$rotulo[which(diccionario_777$Factor == fact_dicc$Factor[pos_fac] & diccionario_777$seccion == fact_dicc$seccion[pos_sec])] -> rotulo_f1
+
+num_777  %>% "[" (rotulo_f1) %>% mutate(MT = 1:nrow(num_777)) -> base_reac #Reacción emocional
+
+
+
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, error=FALSE, fig.height= 4, fig.width = 4, fig.cap = "Figura: Matriz de correlaciones de Reacción emocional. Fuente: elaboración propia."}
+
+col <- colorRampPalette(c("#ccc000", "#ddd999", "#eeeeee", "#999ddd", "#000ccc"))
+
+base_reac[,-which(colnames(base_reac) == "MT" )] %>% cor %>% corrplot.mixed(lower = "number", upper = "color", family = "Times New Roman", lower.col = "#aaaaaa", number.cex = 0.6, tl.cex = 0.6)
+  
+  
+
+# + theme_light(base_family = "Times New Roman") -> a # esto no es ggplot, jajajajajajaja
+
+```
+El gráfico Matriz de correlación de Reacción emocional, nos muestra la escala de colores donde entre más oscuro sea el azul mayor es la correlación.
+
+Se muestra también el gráfico de sedimentación, donde se establece la cantidad de varianza retenida en cada eje. **(toca decidir cuál de los dos dejar)**
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, results='markup'}
+base_reac[,-which(colnames(base_reac) == "MT" )] %>% PCA(graph = FALSE) -> pca
+
+factor_name <- paste(
+fact_dicc[["seccion"]][pos_sec],
+fact_dicc[["Factor"]][pos_fac]
+)
+
+pca %$% ind %$% coord %>% 
+  as.data.frame %$% 
+  Dim.1 -> fitted_factors[[factor_name]]
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pca %$% as.data.frame(eig) %>% mutate(Eje = 1:nrow(.), eigen_cum = cumsum(eigenvalue)) -> eig
+
+```
+
+
+```{r echo = FALSE, warning=FALSE,fig.height= 3, fig.width = 7, fig.cap = "Figura: gráfico de sedimentación de Reacción emocional. Fuente: elaboración propia."}
+eig %>% ggplot + 
+  geom_line(aes(x = Eje, y = eigenvalue)) +
+  geom_point(aes(x = Eje, y = eigenvalue))  + 
+  labs(y = "Autovalores", x = "Eje")  +
+  scale_x_continuous(breaks = 1:nrow(eig)) +
+  scale_y_continuous(limits = c(0, max(eig$eigenvalue + 0.1))) +
+  theme_light(base_family = "Times New Roman")
+
+```
+En el gráfico de observa en el en el eje y los autovalores y en el eje x el número de ejes,el primer eje es el que más porcentaje de varianza retiene, después del segundo autovalor podemos observar que se genera una línea recta. 
+
+```{r echo = FALSE, warning=FALSE, fig.height= 3, fig.width = 7, fig.cap = "Figura: gráfico de sedimentación de Reacción emocional. En azul el porcentaje de varianza explicado por cada eje, en rojo el porcentaje acumulado. Fuente: elaboración propia."}
+eig %>% setNames(letters[1:ncol(.)]) %>% ggplot + 
+  geom_line(aes(x = d, y = b), colour = "#0088dd") +
+  geom_point(aes(x = d, y = b), colour = "#0088dd")  + 
+  geom_line(aes(x = d, y = c), colour = "#dd8800") +
+  geom_point(aes(x = d, y = c), colour = "#dd8800")  + 
+  labs(y = "Varianza", x = "Eje")  +
+  scale_x_continuous(breaks = 1:nrow(eig)) +
+  scale_y_continuous(limits = c(0, max(eig$c + 0.1))) +
+  theme_light(base_family = "Times New Roman")
+
+
+```
+
+El gráfico de sedimentación donde se muestra el porcentaje de varianza acumulado, se observa como el primer eje retiene una buena cantidad de varianza y después de esto crece lentamente.
+
+
+Acto seguido es posible observar el círculo de correlaciones correspondiente. En este gráfico los ítems se visualizan como flechas. Cuando estas flechas apuntan todas en la misma dirección se tiene un buen nivel de consistencia interna.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.height= 5, fig.width = 6, fig.cap = "Figura: círculo de correlaciones de Reacción emocional. Fuente: elaboración propia."}
+
+plot_size <- 1.2
+
+  pca %$% var %$% coord %>% as.data.frame %>% mutate(variable = rownames(.)) %>% 
+  ggplot + 
+  geom_hline(aes(yintercept = 0), size=.2) + 
+  geom_vline(aes(xintercept = 0), size=.2) +
+  geom_segment(aes(x = 0, y = 0, xend = Dim.1, yend = Dim.2), colour = "#222222", arrow = arrow(type = "closed", length = unit(x = 0.3, units = "cm"))) +
+  geom_label_repel(alpha = 1, size = 5, aes(x = Dim.1, y = Dim.2, label = variable), family = "Times New Roman") +
+  labs(x = "Primer factor", y = "Segundo factor") + 
+  xlim(-plot_size, plot_size) +
+  ylim(-plot_size, plot_size) +
+  coord_fixed()  +
+  theme_light(base_family = "Times New Roman") + 
+  annotate(
+    "path",
+    x= cos(seq(0,2*pi,length.out=100)),
+    y= sin(seq(0,2*pi,length.out=100))
+  )
+
+```
+El círculo de correlaciones de Elección en su eje x tiene el primer factor y en su eje y el segundo factor, en este grafico las variables se encuentran simbolizadas por una flecha con una longitud, dentro de un círculo centrado con radio 1, podemos ver que todos los ítems van en la misma dirección.
+
+
+### Análisis de consistencia interna
+
+Para evaluar la consistencia interna es posible usar varios estadisticos. Entre ellos el Alpha de Cronbach y el Lambda 6 de Guttman. que se muestran a continuación.
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+base_reac[,-which(colnames(base_reac) == "MT" )] %>% alpha() -> reability_reac
+
+pca %$% ind %$% coord %>% as.data.frame %$%
+  shapiro.test(Dim.1) -> shapiro_wilks_reac
+
+
+pca %$% ind %$% coord %>% as.data.frame %$%
+  lillie.test(Dim.1) -> lilliefors_reac
+
+tabla_final[["Reac-Emoc"]] = c(reability_reac$total$raw_alpha, reability_reac$total$`G6(smc)`, shapiro_wilks_reac$p.value, lilliefors_reac$p.value)
+
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+data.frame(
+  x1 = min(reability_reac[["item.stats"]][["n"]]),
+  x2 = reability_reac$nvar,
+  x3 = reability_reac[["total"]][["raw_alpha"]],
+  x4 = reability_reac[["total"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("Individuos", "ítems", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman para Reacción emocional. Fuente: elaboración propia.")
+
+```
+En la tabla podemos observar dos estadísticos de consistencia interna, el Alpha de Cronbach y Guttman´s lambda 6 con los 809 individuos y los 17 ítems
+
+Para evaluar la calidad de los ítems se calcula la consistencia interna retirando uno por uno. La siguiente tabla muestra el Análisis realizado al interior de los ítems, corroborando su pertinencia.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+data.frame(
+  x0 = rownames(reability_reac[["alpha.drop"]]),
+  x1 = reability_reac[["item.stats"]][["n"]],
+  x3 = reability_reac[["alpha.drop"]][["raw_alpha"]],
+  x4 = reability_reac[["alpha.drop"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("ítems","Individuos", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman retirando cada ítem para Reacción emocional. Fuente: elaboración propia.")
+
+```
+
+Podemos ver el Alpha de Cronbach y lambda 6 de Guttman por cada uno de los 17 ítems, el cual nos muestra la consistencia de cada uno, tomando los 809 individuos.
+
+### Normalidad del primer factor
+
+Para la Construcción posterior de modelos psicométricos, es relevante comprobar supuestos estadísticos usuales. Para ello se aplican dos pruebas de normalidad conocidas, Shapiro-Wilks y Lilliefors siendo la primera una de las más potentes reportadas. La estructura de hiótesis es
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(shapiro_wilks_reac, caption = "Tabla: Prueba de normalidad de Shapiro-Wilks para Reacción emocional. Fuente: elaboración propia.")
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(lilliefors_reac, caption = "Tabla: Prueba de normalidad de Lilliefors para Reacción emocional. Fuente: elaboración propia.")
+
+```
+
+El test de kolmogorov-smirnov nos muestra la bondad de ajuste, al realizarse un ajuste se obtuvo el test de lillefors el cual nos sirve para muestras mayores a 50, para  probar la normalidad de los datos.
+
+La prueba de Shapiro-Wilks nos indica si los datos de la muestra siguen una distribución normal, si el alpha es mayor al P value rechazo la hipótesis nula.
+
+
+```{r res_ss, cache = TRUE}
+tabla_final -> tabla_final_3
+
+```
+
+
+## Análisis de correlaciones
+
+
+```{r}
+
+fitted_factors %>% "["(c(1, 2, 5, 8, 9)) -> selected_fitted_factors
+
+
+diccionario_777 %>% 
+  mutate(item = rotulo) %>% 
+  select(Factor, seccion, item, texto) %>% 
+  na.omit() -> items
+
+items %$% 
+  expand.grid(
+    item = item, 
+    fact = names(selected_fitted_factors), 
+    stringsAsFactors = FALSE) %>% 
+  mutate(
+    correl = Map(function(name_x, name_y) cor(num_777[[name_x]], fitted_factors[[name_y]]),
+                 item,
+                 fact
+    ) %>% unlist %>% abs
+  ) %>% inner_join(items) -> correlations
+
+correlations %>% 
+  group_by(item) %>% 
+  nest() %>% # glimpse
+  mutate(
+    mayor_correlacion = lapply(data, arrange, desc(correl)) %>% lapply(head, 1),
+    tabla_individual = Map(data.frame, item = item, mayor_correlacion, stringsAsFactors = FALSE)
+  ) %$% bind_rows(tabla_individual) -> best_correlations
+
+  
+```
+
+```{r}
+correl_umbral <- 0.3
+
+best_correlations %>% filter(correl > correl_umbral) %>% 
+  group_by(fact) %>% 
+  nest() %>% mutate(
+    bases_datos = lapply(data, function(x) num_777[x$item]),
+    acp = lapply(bases_datos, PCA, graph = FALSE),
+    alphas = lapply(bases_datos, alpha),
+    shapiro = lapply(acp, function(x) x %$% ind %$% coord %>% as.data.frame %$% shapiro.test(Dim.1)),
+    lillie = lapply(acp, function(x) x %$% ind %$% coord %>% as.data.frame %$% lillie.test(Dim.1))
+  ) -> completo_analisis
+
+completo_analisis %>% 
+  transmute(
+    fact,
+    numero_items = lapply(data, nrow) %>% unlist,
+    varianza_eje_1 = lapply(acp, function(x) x%$% as.data.frame(eig) %>% "["(1,3)) %>% unlist,
+    alpha_cron = lapply(alphas, function(x) x[["total"]][["raw_alpha"]]) %>% unlist,
+    alpha_gut = lapply(alphas, function(x) x[["total"]][["G6(smc)"]]) %>% unlist
+  ) %>% kable
+
+```
+
+
+```{r}
+best_correlations %>% filter(correl > correl_umbral) -> nuevos_factores
+
+nuevos_factores %>% pander
+
+# nuevos_factores %>% saveRDS("nuevos_factores.rds")
+
+```
+
+
+# Modelos SEM
+
+
+
+```{r}
+nuevos_factores %>% select(item, fact) %>% unique %>% na.omit %>% 
+  mutate(nombre_fact = str_replace_all(fact, " ", "_")) %$% 
+  split(item, nombre_fact) -> observables_por_factor
+
+# observables_por_factor %>% lapply(length) %>% unlist %>% ">"(2) %>% which -> cuales
+
+observables_por_factor %>%  
+  lapply(paste, collapse = " + ") %>% Map(paste, names(.), " =~ ", .) %>% unlist -> formulas_basicas
+
+# cfa(ppp[[7]], data = num_777)  
+
+```
+
+## Primer modelo
+
+```{r}
+paste0(formulas_basicas, c(" + Satisfacción_sexual_Comunicación + Satisfacción_sexual_Reacción_emocional", " + Satisfacción_sexual_Comunicación + Satisfacción_sexual_Reacción_emocional", "", " + Práctica_Actividad_Sexual", " + Práctica_Actividad_Sexual")) -> formula_basica_modelo_1
+
+
+# formula_basica_modelo_1 <- c("Práctica_Actividad_Sexual =~ Satisfacción_sexual_Comunicación + Satisfacción_sexual_Reacción_emocional", "Satisfacción_sexual_Comunicación =~ Percepción_de_riesgo_Actividad_Sexual + Percepción_de_riesgo_Elección", "Satisfacción_sexual_Reacción_emocional =~ Percepción_de_riesgo_Actividad_Sexual + Percepción_de_riesgo_Elección")
+
+formula_basica_modelo_1 %>% 
+  paste(collapse = "\n") %>% 
+  sem(data = num_777, auto.fix.first = FALSE) -> modelo_1
+
+modelo_1 %>% summary()
+
+bootstrapLavaan(modelo_1, R = 100) %>% as_tibble() -> bootstrapped_coefs #235 segundos 
+
+bootstrapped_coefs %>% gather("coeficiente", "valor") %>% ggplot + aes(x = coeficiente, y = valor) + geom_boxplot() + ylim(-5, 5) + coord_flip()
+
+
+```
+
+```{r}
+lavaanPlot(model = modelo_1, node_options = list(shape = "box"), edge_options = list(color = "grey"), coefs = T)
+
+
+library(semPlot)
+semPaths(modelo_1)
+
+```
+
+## Modelo 2
+
+```{r}
+paste0(formulas_basicas, c("", "", "", " + Práctica_Actividad_Sexual", " + Práctica_Actividad_Sexual")) %>% "["(c(3, 4, 5)) -> formula_basica_modelo_2
+
+
+# formula_basica_modelo_1 <- c("Práctica_Actividad_Sexual =~ Satisfacción_sexual_Comunicación + Satisfacción_sexual_Reacción_emocional", "Satisfacción_sexual_Comunicación =~ Percepción_de_riesgo_Actividad_Sexual + Percepción_de_riesgo_Elección", "Satisfacción_sexual_Reacción_emocional =~ Percepción_de_riesgo_Actividad_Sexual + Percepción_de_riesgo_Elección")
+
+formula_basica_modelo_2 %>% 
+  paste(collapse = "\n") %>% 
+  sem(data = num_777, auto.fix.single = FALSE, auto.fix.first = FALSE) -> modelo_2
+
+modelo_2 %>% summary()
+
+bootstrapLavaan(modelo_2, R = 100) %>% as_tibble() -> bootstrapped_coefs #235 segundos 
+
+bootstrapped_coefs %>% gather("coeficiente", "valor") %>% ggplot + aes(x = coeficiente, y = valor) + geom_boxplot() + ylim(-5, 5) + coord_flip()
+
+```
+
+```{r}
+lavaanPlot(model = modelo_2, node_options = list(shape = "box"), edge_options = list(color = "grey"), coefs = T)
+
+
+semPaths(modelo_2)
+
+```
+
+## Modelo 3
+
+```{r}
+c(formulas_basicas[1:3], c("Práctica_Actividad_Sexual ~~ Percepción_de_riesgo_Actividad_Sexual", "Percepción_de_riesgo_Actividad_Sexual ~~ Percepción_de_riesgo_Elección", "Percepción_de_riesgo_Elección ~~ Práctica_Actividad_Sexual")) -> formula_basica_modelo_3
+
+
+# formula_basica_modelo_1 <- c("Práctica_Actividad_Sexual =~ Satisfacción_sexual_Comunicación + Satisfacción_sexual_Reacción_emocional", "Satisfacción_sexual_Comunicación =~ Percepción_de_riesgo_Actividad_Sexual + Percepción_de_riesgo_Elección", "Satisfacción_sexual_Reacción_emocional =~ Percepción_de_riesgo_Actividad_Sexual + Percepción_de_riesgo_Elección")
+
+formula_basica_modelo_3 %>% 
+  paste(collapse = "\n") %>% 
+  sem(data = num_777, auto.fix.single = FALSE, auto.fix.first = FALSE) -> modelo_3
+
+modelo_3 %>% summary()
+
+bootstrapLavaan(modelo_3, R = 100) %>% as_tibble() -> bootstrapped_coefs #235 segundos 
+
+bootstrapped_coefs %>% gather("coeficiente", "valor") %>% ggplot + aes(x = coeficiente, y = valor) + geom_boxplot() + ylim(-5, 5) + coord_flip()
+
+
+```
+
+```{r}
+lavaanPlot(model = modelo_3, node_options = list(shape = "box"), edge_options = list(color = "grey"), coefs = T)
+
+
+semPaths(modelo_3)
+
+```
+
+## Modelo 4
+
+```{r}
+paste0(formulas_basicas, c(" + Práctica_Actividad_Sexual", " + Práctica_Actividad_Sexual", "", " + Práctica_Actividad_Sexual", " + Práctica_Actividad_Sexual")) -> formula_basica_modelo_4
+
+formula_basica_modelo_4 %>% 
+  paste(collapse = "\n") -> formula_completa
+
+  sem(formula_completa, data = sample_n(num_777, 500), auto.fix.single = FALSE, auto.fix.first = FALSE) -> modelo_4
+
+modelo_4 %>% summary()
+
+bootstrapLavaan(modelo_4, R = 100) %>% as_tibble() -> bootstrapped_coefs #235 segundos 
+
+bootstrapped_coefs %>% gather("coeficiente", "valor") %>% ggplot + aes(x = coeficiente, y = valor) + geom_boxplot() + ylim(-5, 5) + coord_flip()
+
+```
+
+```{r}
+lavaanPlot(model = modelo_4, node_options = list(shape = "box"), edge_options = list(color = "grey"), coefs = T)
+
+
+semPaths(modelo_4)
+
+```
+

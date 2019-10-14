@@ -1,0 +1,69 @@
+---
+title: "777 Multivariado"
+output:
+  word_document:
+    reference_docx: Plantilla_APA.docx
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, cache=FALSE}
+library("magrittr")
+library("dplyr")
+library("stringr")
+library("lavaan")
+library("extrafont")
+
+```
+
+
+```{r}
+loadfonts()
+
+readRDS("diccionario_777.rds") -> diccionario_777
+
+readRDS("datos-num_777.rds") -> num_777
+
+readRDS("nuevos_factores.rds") -> nuevos_factores
+
+```
+
+
+```{r}
+nuevos_factores %>% select(item, fact) %>% unique %>% na.omit %>% 
+  mutate(nombre_fact = str_replace_all(fact, " ", "_")) %$% 
+  split(item, nombre_fact) -> observables_por_factor
+
+# observables_por_factor %>% lapply(length) %>% unlist %>% ">"(2) %>% which -> cuales
+
+observables_por_factor %>%  
+  lapply(paste, collapse = " + ") %>% Map(paste, names(.), " =~ ", .) -> formulas
+
+# cfa(ppp[[7]], data = num_777)  
+
+```
+
+```{r}
+cfa(formulas[[1]], data = num_777) -> ppp
+cfa(formulas[[1]], data = num_777, auto.fix.first = FALSE) -> qqq
+formulas %>% lapply(cfa, data = num_777) -> confirmatory_models
+identical(qqq, confirmatory_models[[1]])
+
+
+confirmatory_models %>% lapply(summary, standardized = TRUE) -> ppp
+
+```
+
+```{r}
+formulas
+
+formulas %>% paste(collapse = "\n") %>% sem(data = num_777) -> ppp
+
+summary(ppp, standardized = TRUE, )
+```
+

@@ -1,0 +1,172 @@
+
+### Reacción emocional
+
+
+```{r}
+seccion_analisis %>% 
+  filter(Factor == "Reacción emocional") %$%
+  data %>% 
+  extract2(1) %>%
+  mutate(descrip = str_c(rotulo, texto, sep = ": ")) %$% 
+  paste(descrip, collapse = ". ") -> fig_caption
+
+
+```
+
+A continuación se muestra el análisis realizado para las preguntas correspondientes al formulario de Percepción de riesgo asociadas con el constructo de Reacción emocional^[`r fig_caption`].
+
+
+#### Análisis de correlación múltiple
+
+En primera instancia se calcula la matriz de correlaciones. En este gráfico es importante encontrar correlaciones fuertes entre los ítems, al menos mayores a 0.5.
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, error=FALSE, fig.height= 8, fig.width = 8, fig.cap = "Figura: Matriz de correlaciones de Reacción emocional. Fuente: elaboración propia."}
+
+
+col <- colorRampPalette(c("#ccc000", "#ddd999", "#eeeeee", "#999ddd", "#000ccc"))
+
+seccion_analisis %>% 
+  filter(Factor == "Reacción emocional") %$% 
+  bases_datos %>% 
+  extract2(1) %>% 
+  cor %>% 
+  corrplot.mixed(
+    lower = "number", 
+    upper = "color", 
+    family = "Times New Roman", 
+    lower.col = "#aaaaaa",  
+    number.cex = 0.6, 
+    tl.cex = 0.6
+  )
+  
+  
+```
+
+Se muestra también el gráfico de sedimentacián, donde se establece la cantidad de varianza retenida en cada eje. 
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+seccion_analisis %>% 
+  filter(Factor == "Reacción emocional") %$% 
+  acp %>% 
+  extract2(1) %$% 
+  as.data.frame(eig) %>% 
+  mutate(Eje = 1:nrow(.), eigen_cum = cumsum(eigenvalue)) -> eig
+
+```
+
+```{r echo = FALSE, warning=FALSE, fig.height= 3, fig.width = 7, fig.cap = "Figura: Gráfico de sedimentación de Reacción emocional. En azul el porcentaje de varianza explicado por cada eje, en naranja el porcentaje acumulado. Fuente: Elaboración propia."}
+eig %>% setNames(letters[1:ncol(.)]) %>% ggplot + 
+  geom_line(aes(x = d, y = b), colour = "#0088dd") +
+  geom_point(aes(x = d, y = b), colour = "#0088dd")  + 
+  geom_line(aes(x = d, y = c), colour = "#dd8800") +
+  geom_point(aes(x = d, y = c), colour = "#dd8800")  + 
+  labs(y = "Varianza", x = "Eje")  +
+  scale_x_continuous(breaks = 1:nrow(eig)) +
+  scale_y_continuous(limits = c(0, max(eig$c + 0.1))) +
+  theme_light(base_family = "Times New Roman")
+
+
+```
+
+Acto seguido es posible observar el círculo de correlaciones correspondiente. En este gráfico los ítems se visualizan como flechas. Cuando estas flechas apuntan todas en la misma dirección se tiene un nivel de consistencia interna alto.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.height= 8, fig.width = 8, fig.cap = "Figura: círculo de correlaciones de Reacción emocional. Fuente: Elaboración propia."}
+
+plot_size <- 1.2
+
+seccion_analisis %>% 
+  filter(Factor == "Reacción emocional") %$% 
+  acp %>% 
+  extract2(1) %$% 
+  var %$% 
+  coord %>% 
+  as.data.frame %>% 
+  mutate(variable = rownames(.)) %>% 
+  ggplot + 
+  geom_hline(aes(yintercept = 0), size=.2) + 
+  geom_vline(aes(xintercept = 0), size=.2) +
+  geom_segment(aes(x = 0, y = 0, xend = Dim.1, yend = Dim.2), colour = "#222222", arrow = arrow(type = "closed", length = unit(x = 0.3, units = "cm"))) +
+  geom_label_repel(alpha = 1, size = 5, aes(x = Dim.1, y = Dim.2, label = variable), family = "Times New Roman") +
+  labs(x = "Primer factor", y = "Segundo factor") + 
+  xlim(-plot_size, plot_size) +
+  ylim(-plot_size, plot_size) +
+  coord_fixed()  +
+  theme_light(base_family = "Times New Roman") + 
+  annotate(
+    "path",
+    x= cos(seq(0,2*pi,length.out=100)),
+    y= sin(seq(0,2*pi,length.out=100))
+  )
+
+```
+
+
+#### Análisis de consistencia interna
+
+Para evaluar la consistencia interna es posible usar varios estadísticos. Entre ellos el Alpha de Cronbach y el Lambda 6 de Guttman. que se muestran a continuación.
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+seccion_analisis %>% 
+  filter(Factor == "Reacción emocional") %$% 
+  alphas %>% 
+  extract2(1) -> reability
+
+
+seccion_analisis %>% 
+  filter(Factor == "Reacción emocional") %$% 
+  shapiro %>% 
+  extract2(1) -> shapiro_wilks
+
+seccion_analisis %>% 
+  filter(Factor == "Reacción emocional") %$% 
+  lillie %>% 
+  extract2(1) -> lilliefors
+
+
+data.frame(
+  x1 = min(reability[["item.stats"]][["n"]]),
+  x2 = reability$nvar,
+  x3 = reability[["total"]][["raw_alpha"]],
+  x4 = reability[["total"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("Individuos", "ítems", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman para Reacción emocional. Fuente: elaboración propia.")
+
+```
+
+Para evaluar la pertinencia de los ítems en torno al factor se calcula la consistencia interna retirando los ítems uno por uno. Este análisis del ítem permite medir la consistencia en distintos escenarios y así detectar cuáles ítems resultan inapropiados o afectan la consistencia interna de manera negativa. La siguiente tabla muestra el análisis realizado.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+
+data.frame(
+  x0 = rownames(reability[["alpha.drop"]]),
+  x1 = reability[["item.stats"]][["n"]],
+  x3 = reability[["alpha.drop"]][["raw_alpha"]],
+  x4 = reability[["alpha.drop"]][["G6(smc)"]]
+  ) %>% 
+  setNames(c("ítems","Individuos", "Alpha de Cronbach", "Guttman's Lambda 6")) %>% 
+  kable(digits = 2, caption = "Tabla: Alpha de Cronbach y Lambda 6 de Guttman retirando cada ítem para Reacción emocional. Fuente: elaboración propia.")
+
+```
+
+#### Normalidad del factor
+
+Para la Construcción posterior de modelos psicométricos, es relevante comprobar supuestos estadísticos usuales. Para ello se aplican dos pruebas de normalidad conocidas, Shapiro-Wilks y Lilliefors siendo la primera una de las más potentes reportadas. Para tener normalidad es necesario que los p valores reportados por las pruebas sean mayores a la significancia de $\alpha = 0.05$. Si el p valor resulta menor a 0.05, el factor calculado en el análisis de componentes principales previo 
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(shapiro_wilks, caption = "Tabla: Prueba de normalidad de Shapiro-Wilks para Reacción emocional. Fuente: elaboración propia.")
+
+```
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+pander(lilliefors, caption = "Tabla: Prueba de normalidad de Lilliefors para Reacción emocional. Fuente: elaboración propia.")
+
+```
+
+

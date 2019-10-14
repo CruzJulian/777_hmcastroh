@@ -1,0 +1,197 @@
+---
+title: "777 Datos"
+author: "Norberto Andres Camacho Hincapie"
+date: "15 de febrero de 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, cache=FALSE}
+
+###########
+# UTF-8
+############
+
+
+
+library("ltm")
+library("tidyr")
+library("jtools")
+library("knitr")
+library("ggplot2")
+library("stringr")
+library("dplyr")
+library("scales")
+library("googlesheets")
+library("RColorBrewer")
+library("magrittr")
+library("mice")
+library("ltm")
+library("corrplot")
+library("FactoMineR")
+library("ggrepel")
+library("knitr")
+library("purrr")
+library("mice")
+library("tibble")
+
+
+```
+
+```{r}
+mi_configuracion <- 
+  list(
+    tiempo = c("Nunca/No aplica.","Más de un año.","Último año.", "Últimos 6 meses.", "Últimos 3 meses.", "En el último mes."),
+    acuerdo = c("Totalmente De Acuerdo", "De Acuerdo", "Ni de acuerdo ni en desacuerdo",  "En Desacuerdo", "Totalmente en Desacuerdo"),
+    frecuencia = c("Siempre", "Casi Siempre", "Casi Nunca", "Nunca")
+  )
+
+```
+
+
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, cache=FALSE}
+
+"https://docs.google.com/spreadsheets/d/1b_JeK80JiYfLBkn0H2Cm9DgC47O_N-JnZHu-C7uZ5Wc/edit?usp=sharing" -> link2
+
+link2 %>% gs_url(lookup = FALSE, verbose = FALSE) %>% gs_read_listfeed(range=NULL) -> diccionario_777
+  
+
+"https://docs.google.com/spreadsheets/d/10qllwE4T_imJ6cJxh-INzfDMC7ZddpYjZFKKl4aCryk/edit?usp=sharing"-> link
+
+
+link  %>% gs_url(lookup = FALSE, verbose = FALSE) %>% gs_read_listfeed(ws = "Respuestas de formulario 1", range=NULL)  -> base_777_1
+
+link %>% gs_url(lookup = FALSE, verbose = FALSE) %>% gs_read_listfeed( ws = "Respuestas de formulario 2" ,range=NULL) -> base_777_2
+
+#data.frame(colnames(base_777), colnames(base_777_2)) %>% View
+
+
+rbind(base_777_1, base_777_2 ) %>% setNames(diccionario_777[["rotulo"]]) -> datos_v0 #base de datos bruta
+
+diccionario_777 %>% 
+  select(Respuesta, Calif) %>% 
+  unique -> grupos_items
+
+grupos_items %$% 
+  Map(
+    function(res, cal){
+      diccionario_777 %$% extract(rotulo, Respuesta == res & Calif == cal) %>% extract(datos_v0, .)
+    },
+    Respuesta,
+    Calif) %>% setNames(unlist(unite(grupos_items, .))) -> datos_v1 #Datos separados por respuesta y calificacion
+
+## Operaciones sobre los datos para que sean factores ordenados
+
+datos_v2 <- list() # Datos listos con factores ordenados fragmentados
+
+datos_v1[["no-likert_no"]] -> datos_v2[["no-likert_no"]]
+
+datos_v1[["tiempo_directa"]] %>% 
+  lapply(
+    ordered,
+    mi_configuracion[["tiempo"]]
+  ) %>% as_tibble() -> datos_v2[["tiempo_directa"]]
+
+datos_v1[["tiempo_inversa"]] %>% 
+  lapply(
+    ordered,
+    mi_configuracion[["tiempo"]] %>% rev
+  ) %>% as_tibble() -> datos_v2[["tiempo_inversa"]]
+
+datos_v1[["frecuencia_directa"]] %>% 
+  lapply(
+    ordered,
+    mi_configuracion[["frecuencia"]]
+  ) %>% as_tibble() -> datos_v2[["frecuencia_directa"]]
+
+datos_v1[["frecuencia_inversa"]] %>% 
+  lapply(
+    ordered,
+    mi_configuracion[["frecuencia"]] %>% rev
+  ) %>% as_tibble() -> datos_v2[["frecuencia_inversa"]]
+
+datos_v1[["acuerdo_directa"]] %>% 
+  lapply(
+    ordered,
+    mi_configuracion[["acuerdo"]]
+  ) %>% as_tibble() -> datos_v2[["acuerdo_directa"]]
+
+datos_v1[["acuerdo_inversa"]] %>% 
+  lapply(
+    ordered,
+    mi_configuracion[["acuerdo"]] %>% rev
+  ) %>% as_tibble() -> datos_v2[["acuerdo_inversa"]]
+
+datos_v2 %>% 
+  bind_cols() %>% 
+  extract(diccionario_777[["rotulo"]]) -> datos_v3 -> base_777 # Datos listos con factores ordenados unificados
+
+saveRDS(base_777 ,"777_Datos/datos_777.rds")
+saveRDS(base_777 ,"777_Univariado/datos_777.rds")
+saveRDS(base_777 ,"777_Multivariado/datos_777.rds")
+
+base_777 %>% head
+
+```
+
+```{r}
+## pasar los datos likert a numéricos
+
+datos_v4 <- list() # Datos listos con likert numéricos fragmentado
+
+datos_v2[["no-likert_no"]] -> datos_v4[["no-likert_no"]]
+
+datos_v2[["tiempo_directa"]] %>% 
+  lapply(as.numeric) %>% as_tibble() -> datos_v4[["tiempo_directa"]]
+
+datos_v2[["tiempo_inversa"]] %>% 
+  lapply(as.numeric) %>% as_tibble() -> datos_v4[["tiempo_inversa"]]
+
+datos_v2[["frecuencia_directa"]] %>% 
+  lapply(as.numeric) %>% as_tibble() -> datos_v4[["frecuencia_directa"]]
+
+datos_v2[["frecuencia_inversa"]] %>% 
+  lapply(as.numeric) %>% as_tibble() -> datos_v4[["frecuencia_inversa"]]
+
+datos_v2[["acuerdo_directa"]] %>% 
+  lapply(as.numeric) %>% as_tibble() -> datos_v4[["acuerdo_directa"]]
+
+datos_v2[["acuerdo_inversa"]] %>% 
+  lapply(as.numeric) %>% as_tibble() -> datos_v4[["acuerdo_inversa"]]
+
+datos_v4 %>% 
+  bind_cols() %>% 
+  extract(diccionario_777[["rotulo"]]) -> datos_v5 -> base_num_777 # Datos listos con likert numéricos unificado
+
+
+```
+
+
+
+```{r}
+
+saveRDS(base_num_777 ,"777_Datos/datos-num_777.rds")
+saveRDS(base_num_777 ,"777_Univariado/datos-num_777.rds")
+saveRDS(base_num_777 ,"777_Multivariado/datos-num_777.rds")
+
+
+
+base_num_777 %>% head
+
+```
+
+
+```{r}
+saveRDS(diccionario_777 ,"777_Datos/diccionario_777.rds")
+saveRDS(diccionario_777 ,"777_Univariado/diccionario_777.rds")
+saveRDS(diccionario_777 ,"777_Multivariado/diccionario_777.rds")
+
+diccionario_777 %>% head
+
+```
+
